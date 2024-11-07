@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class HttpDataSender {
     public static void main(String[] args) {
-        String serverUrl = "http://localhost:8080/pio";
+        String serverUrl = "http://192.168.78.210:8080/cameras";
         String macAddress = MacAddressFetcher.getMacAddress();
 
         if (macAddress == null) {
