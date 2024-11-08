@@ -3,12 +3,8 @@ package nl.fontys.s3;
 import nu.pattern.OpenCV;
 import org.opencv.core.*;
 import org.opencv.highgui.HighGui;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.videoio.VideoCapture;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
+
 
 public class Main {
     private static final String SERVER_URL = "http://localhost:8080/cameras"; // Temp Host URL
