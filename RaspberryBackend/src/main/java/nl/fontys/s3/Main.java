@@ -1,21 +1,32 @@
 package nl.fontys.s3;
 
 import nu.pattern.OpenCV;
-import org.opencv.core.*;
+import org.opencv.core.Mat;
 import org.opencv.highgui.HighGui;
 import org.opencv.videoio.VideoCapture;
 
 
 public class Main {
     private static final String SERVER_URL = "http://localhost:8080/cameras"; // Temp Host URL
+
     private static final String MAC_ADDRESS = MacAddressFetcher.getMacAddress();
+    private static final String prototxtPath = "models/deploy.prototxt";
+    private static final String modelPath = "models/mobilenet_iter_73000.caffemodel";
 
     private static final int CAMERA_INDEX = 0; // default camera index
 
     public static void main(String[] args) {
-        OpenCV.loadShared();
+        OpenCV.loadLocally();
+
+        if (MAC_ADDRESS == null) {
+            System.out.println("MAC Address not available.");
+            return;
+        }
+
+        MobileNetSSDPeopleDetector detector = new MobileNetSSDPeopleDetector(prototxtPath, modelPath);
 
         VideoCapture camera = new VideoCapture(CAMERA_INDEX);
+
         if (!camera.isOpened()) {
             System.out.println("Error: Camera not accessible");
             return;
@@ -23,31 +34,24 @@ public class Main {
 
         Mat frame = new Mat();
 
-        while (true) {
-            if (camera.read(frame)) {
-                HighGui.imshow("Camera Feed", frame);
+        while (camera.read(frame)) {
+            int peopleDetections = detector.detectPeople(frame);
 
-                String macAddress = MAC_ADDRESS;
+            if (peopleDetections >= 0) {
+                HttpDataSender.sendData(SERVER_URL, MAC_ADDRESS, peopleDetections);
+            }
 
-                if (macAddress == null) {
-                    System.out.println("MAC Address is null");
-                    return;
-                }
+            HighGui.imshow("People Detection", frame);
 
-                String jsonPayload = "{ \"macAddress\": \"" + macAddress + "\" }";
-                HttpDataSender.sendData(SERVER_URL, jsonPayload);
+            if (HighGui.waitKey(1) == 27) break;  // Exit on 'Esc' key
 
-                // Exit on 'Esc' key
-                if (HighGui.waitKey(30) == 27) {
-                    break;
-                }
-            } else {
-                System.out.println("Error: Could not read frame");
-                break;
+            try {
+                Thread.sleep(5000); // Wait for 5 seconds between checks
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         camera.release();
         HighGui.destroyAllWindows();
     }
-
 }

@@ -34,9 +34,4 @@ public class MacAddressFetcher {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        String macAddress = getMacAddress();
-        System.out.println("MAC Address: " + macAddress);
-    }
 }

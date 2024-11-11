@@ -6,15 +6,16 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class HttpDataSender {
-    public static void sendData(String serverUrl, String jsonPayload) {
+    public static void sendData(String serverUrl, String macAddress, int peopleCount) {
         try {
+            String jsonPayload = "{ \"macAddress\": \"" + macAddress + "\", \"peopleCount\": " + peopleCount + " }";
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            // Write JSON payload to request
+            // Write json payload to request
             try (OutputStream outputStream = connection.getOutputStream()) {
                 byte[] input = jsonPayload.getBytes(StandardCharsets.UTF_8);
                 outputStream.write(input, 0, input.length);
