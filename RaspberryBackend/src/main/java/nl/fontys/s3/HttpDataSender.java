@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class HttpDataSender {
     public static void sendData(String serverUrl, String macAddress, int peopleCount) {
         try {
-            String jsonPayload = "{ \"macAddress\": \"" + macAddress + "\", \"peopleCount\": " + peopleCount + " }";
+            String jsonPayload = "{ \"macAddress\": \"" + macAddress + "\", \"nrOfOccupants\": " + peopleCount + " }";
             URL url = new URL(serverUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
