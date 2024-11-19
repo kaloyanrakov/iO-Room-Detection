@@ -14,10 +14,10 @@ public class SendWarningEarlyVacatedRoom {
         this.graphServiceClient = getGraphClient.getGraphServiceClient();
     }
 
-    public void sendEmail(String recipientEmail, String recipientName) {
-        String senderEmail = "Testruimte1.eindhoven@iodigital.com";
-        if (recipientEmail != null) {
-            senderEmail = recipientEmail;
+    public void sendEmail(String recipientEmail, String recipientName, String senderEmail) {
+        String fromEmailId = "Testruimte1.eindhoven@iodigital.com";
+        if (senderEmail != null) {
+            fromEmailId = senderEmail;
         }
 
         Message message = new Message() {{
@@ -44,7 +44,7 @@ public class SendWarningEarlyVacatedRoom {
         com.microsoft.graph.users.item.sendmail.SendMailPostRequestBody sendMailPostRequestBody = new com.microsoft.graph.users.item.sendmail.SendMailPostRequestBody();
         sendMailPostRequestBody.setMessage(message);
         sendMailPostRequestBody.setSaveToSentItems(false);
-        graphServiceClient.users().byUserId(senderEmail).sendMail().post(sendMailPostRequestBody);
+        graphServiceClient.users().byUserId(fromEmailId).sendMail().post(sendMailPostRequestBody);
 
         //CC people
 //        LinkedList<Recipient> ccRecipientsList = new LinkedList<Recipient>();
