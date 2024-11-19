@@ -1,0 +1,35 @@
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    max-width: 100px;
+    float: left;
+}
+
+.sidebar h2 {
+    padding: 20px;
+}
+
+.filter {
+    display: flex;
+    justify-content: flex-start;
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.filter select{
+    font-size: 1.1rem;
+    margin-left: 10px;
+    background-color: #EDF9FF;
+    color: #294250;
+}
+
+.btn {
+    background-color: #294250;
+    color: #EDF9FF;
+    border-radius: 0;
+}
