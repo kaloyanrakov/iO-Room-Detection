@@ -2,6 +2,8 @@ import Layout from '../Layout';
 import '../../assets/css/allRooms.css';
 
 import logo from '../../assets/img/IO_Logo.png';
+import userIcon from '../../assets/img/user.png';
+import serachIcon from '../../assets/img/search.png';
 
 function AllRoomsPage() {
     const sidebarContent = (
@@ -26,7 +28,21 @@ function AllRoomsPage() {
     );
 
     const mainContent = (
-        <p>This is the content on the right</p>
+        <div className="main-content">
+            <div className="search-bar">
+                <input type="text" placeholder="Search Rooms"/>
+                <button className="btn" type="submit"><img src={serachIcon} alt="search icon"/></button>
+            </div>
+            <div className="rooms-list">
+                <div className="indiv-room">
+                    <h2>Room Name</h2>
+                    <img src={userIcon} alt="person icon"/>
+                    <p className="people-amount">8/10</p>
+                    <p className="room-status">Available</p>
+                    <p className="Until">Until 10:30</p>
+                </div>
+            </div>
+        </div>
     );
     return (
         <Layout sidebarContent={sidebarContent} rightSideContent={mainContent}/>

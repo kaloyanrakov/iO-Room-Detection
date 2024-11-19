@@ -16,9 +16,7 @@ img {
 .filter {
     display: flex;
     justify-content: flex-start;
-    margin: auto;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin: 0 auto;
 }
 
 .filter select{
@@ -31,5 +29,46 @@ img {
 .btn {
     background-color: #294250;
     color: #EDF9FF;
+    border: none;
     border-radius: 0;
+}
+
+    .btn:hover {
+    border: 1px solid #EDF9FF;
+    }
+
+
+
+.main-content .search-bar {
+    display: flex;
+    width: 70%;
+    margin: 40px auto;
+    justify-content: center;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0 10px;
+    font-size: 1.1rem;
+    border: 1px solid #6B9AB3;
+    border-radius: 0;
+    background-color: #EDF9FF;
+    color: #294250;
+}
+
+.search-bar button {
+    max-height: 40px;
+    background-color: #EDF9FF;
+    color: #EDF9FF;
+    border: 1px solid #6B9AB3;
+    border-radius: 0;
+    padding: 5px;
+}
+
+    .search-bar button:hover {
+        border: 1px solid #6B9AB3;
+    }
+
+.search-bar button img {
+    max-width: 25px;
 }
