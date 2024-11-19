@@ -72,3 +72,68 @@ img {
 .search-bar button img {
     max-width: 25px;
 }
+
+
+.main-content .rooms-list{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.indiv-room {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px auto;
+    padding: 10px;
+    width: 90%;
+    background-color: #294250;
+    color: white;
+}
+
+.room-left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: auto 0;
+}
+
+.room-left p {
+    margin: auto 0;
+    font-size: 1.3rem;
+}
+
+.room-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.indiv-room img {
+    min-width: 30px;
+    max-height: 30px;
+    float: left;
+    margin: auto 0 auto 20px;
+}
+
+.indiv-room .status, .indiv-room .until {
+    float: right;
+}
+
+.available {
+    border-left: 10px solid lawngreen;
+}
+
+.occupied {
+    border-left: 10px solid red;
+}
+
+.room-right .available {
+    border: none;
+    color: lawngreen;
+}
+
+.room-right .occupied {
+    border: none;
+    color: red;
+}

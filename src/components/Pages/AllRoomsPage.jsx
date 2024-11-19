@@ -21,7 +21,7 @@ function AllRoomsPage() {
                 </select>
             </div>
             <br/>
-            <form onClick="clearfilters()">
+            <form>
                 <button className="btn" type="submit">Clear Filters</button>
             </form>
         </div>
@@ -33,13 +33,30 @@ function AllRoomsPage() {
                 <input type="text" placeholder="Search Rooms"/>
                 <button className="btn" type="submit"><img src={serachIcon} alt="search icon"/></button>
             </div>
+
             <div className="rooms-list">
-                <div className="indiv-room">
-                    <h2>Room Name</h2>
-                    <img src={userIcon} alt="person icon"/>
-                    <p className="people-amount">8/10</p>
-                    <p className="room-status">Available</p>
-                    <p className="Until">Until 10:30</p>
+                <div className="indiv-room available">
+                    <div className="room-left">
+                        <h2>Room Name</h2>
+                        <img src={userIcon} alt="person icon"/>
+                        <p className="people-amount">8/10</p>
+                    </div>
+                    <div className="room-right">
+                        <p className="room-status available">Available</p>
+                        <p className="until">Until 10:30</p>
+                    </div>
+                </div>
+
+                <div className="indiv-room occupied">
+                    <div className="room-left">
+                        <h2>Room Name</h2>
+                        <img src={userIcon} alt="person icon"/>
+                        <p className="people-amount">8/10</p>
+                    </div>
+                    <div className="room-right">
+                        <p className="room-status occupied">Occupied</p>
+                        <p className="until">Until 10:30</p>
+                    </div>
                 </div>
             </div>
         </div>
