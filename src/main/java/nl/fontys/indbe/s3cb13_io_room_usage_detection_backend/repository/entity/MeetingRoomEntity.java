@@ -29,10 +29,6 @@ public class MeetingRoomEntity {
     @Min(0)
     @Column(name = "current_capacity")
     private Integer currentCapacity;
-    @NotNull
-    @Min(0)
-    @Column(name = "max_capacity")
-    private Integer maxCapacity;
     @OneToOne
     @JoinColumn(name = "camera_connection_id")
     private CameraConnectionEntity cameraConnection;
