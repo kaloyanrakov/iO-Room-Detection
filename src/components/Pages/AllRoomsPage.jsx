@@ -9,7 +9,7 @@ function AllRoomsPage() {
     const sidebarContent = (
         <div className="sidebar">
             <div className="img-div">
-                <img src={logo} alt="IO_Logo"/>
+                <img src={logo} className="logo" alt="IO_Logo" />
             </div>
             <h2>Filters</h2>
             <div className="filter">
@@ -20,7 +20,7 @@ function AllRoomsPage() {
                     <option value="o-now">Occupied Now</option>
                 </select>
             </div>
-            <br/>
+            <br />
             <form>
                 <button className="btn" type="submit">Clear Filters</button>
             </form>
@@ -30,15 +30,15 @@ function AllRoomsPage() {
     const mainContent = (
         <div className="main-content">
             <div className="search-bar">
-                <input type="text" placeholder="Search Rooms"/>
-                <button className="btn" type="submit"><img src={serachIcon} alt="search icon"/></button>
+                <input type="text" placeholder="Search Rooms" />
+                <button className="btn" type="submit"><img src={serachIcon} alt="search icon" /></button>
             </div>
 
             <div className="rooms-list">
                 <div className="indiv-room available">
                     <div className="room-left">
                         <h2>Room Name</h2>
-                        <img src={userIcon} alt="person icon"/>
+                        <img src={userIcon} alt="person icon" />
                         <p className="people-amount">8/10</p>
                     </div>
                     <div className="room-right">
@@ -50,7 +50,7 @@ function AllRoomsPage() {
                 <div className="indiv-room occupied">
                     <div className="room-left">
                         <h2>Room Name</h2>
-                        <img src={userIcon} alt="person icon"/>
+                        <img src={userIcon} alt="person icon" />
                         <p className="people-amount">8/10</p>
                     </div>
                     <div className="room-right">
@@ -62,7 +62,7 @@ function AllRoomsPage() {
         </div>
     );
     return (
-        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent}/>
+        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent} />
     );
 }
 
