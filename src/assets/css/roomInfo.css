@@ -8,8 +8,9 @@
     border-radius: 7px;
 }
 
-.appointment-person {
-    flex-grow: 1;
-    text-align: right;
-    margin-right: 1em;
+.sidebar-buttons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }

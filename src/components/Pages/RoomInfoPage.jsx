@@ -1,5 +1,4 @@
 import Layout from '../Layout';
-import '../../assets/css/allRooms.css';
 import '../../assets/css/roominfo.css';
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
@@ -16,6 +15,21 @@ function formatDate(date) {
         }`);
 
 }
+const sidebarContent = (
+    <div className="sidebar">
+        <div className="img-div">
+            <img src={logo} className="logo" alt="IO_Logo" />
+        </div>
+        <h2>Room Name</h2>
+        <div className="filter">
+            <h1 className="status">Status: <span className="text-occupied">Occupied</span></h1>
+        </div>
+        <br />
+        <div className="room-right-image">
+            <PeopleAmount label="8/10" />
+        </div>
+    </div>
+);
 
 function Appointment({ appointment, nthPerson }) {
     const { name, from, to } = appointment;
@@ -62,6 +76,14 @@ function RoomInfoPage() {
             <br />
             <div className="room-right-image">
                 <PeopleAmount label="8/10" />
+            </div>
+            <div className="sidebar-buttons">
+                <button className="btn btn-delete" onClick={() => handleDeleteRoom()}>
+                    Delete Room
+                </button>
+                <button className="btn btn-update" onClick={() => handleUpdateRoom()}>
+                    Update Room
+                </button>
             </div>
         </div >
     );
