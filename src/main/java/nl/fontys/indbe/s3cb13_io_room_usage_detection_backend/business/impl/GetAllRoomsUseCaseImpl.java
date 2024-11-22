@@ -46,8 +46,17 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
 
         List<Room> rooms = roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex() , request.getPageSize());
 
+        String replacedEmail = "jupiter.eindhoven@iodigital.com";
+        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
+
+
         List<MeetingRoom> meetingRooms = rooms.stream()
                 .map(room ->  {
+
+                    if (room.getEmailAddress().equals(replacedEmail)) {
+                        room.setEmailAddress(replacementEmail);
+                    }
+
                     MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.getMeetingRoomEntityByEmail(room.getEmailAddress());
                     RoomEvent roomEvent = null;
                     try {
