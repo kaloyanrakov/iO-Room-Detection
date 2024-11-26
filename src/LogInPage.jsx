@@ -1,12 +1,31 @@
 import iOLogo from './assets/iO-logo.jpg';
 import styles from './LogInPage.module.css';
+import { useState } from 'react';
 
 const LogInPage = () => {
+  const [error, setError] = useState('');
+
+  const hardcodedUsername = 'testuser';
+  const hardcodedPassword = 'password123';
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const username = form.nameOrEmail.value;
+    const password = form.password.value;
+
+    if (username === hardcodedUsername && password === hardcodedPassword) {
+      setError('');
+      alert('Login successful!');
+    } else {
+      setError('Invalid username or password');
+    }
+  };
+  
     return (
       <div className={styles.container}>
         <img src={iOLogo} alt="iO Logo" className={styles.logo} />
-        <form className={styles.form}>
-          
+        <form className={styles.form} onSubmit={handleSubmit}>          
           <div className={styles.inputGroup}>
             <label htmlFor="nameOrEmail">Name/Email</label>
             <input
@@ -27,6 +46,7 @@ const LogInPage = () => {
               required
             />
           </div>
+          {error && <p className={styles.errorMessage}>{error}</p>}
           <button type="submit" className={styles.submitButton}>
             Log In
           </button>
@@ -34,7 +54,6 @@ const LogInPage = () => {
       </div>
     );
   };
-
 
 export default LogInPage; 
 
