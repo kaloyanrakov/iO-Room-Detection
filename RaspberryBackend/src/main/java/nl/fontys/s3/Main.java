@@ -34,11 +34,15 @@ public class Main {
 
         Mat frame = new Mat();
 
+        int prevPeopleDetected = 0;
+
         while (camera.read(frame)) {
             int peopleDetections = detector.detectPeople(frame);
 
-            if (peopleDetections >= 0) {
+            if (peopleDetections >= 0 && peopleDetections != prevPeopleDetected) {
                 HttpDataSender.sendData(SERVER_URL, MAC_ADDRESS, peopleDetections);
+                prevPeopleDetected = peopleDetections;
+
             }
 
             HighGui.imshow("People Detection", frame);
