@@ -1,11 +1,35 @@
 import Layout from '../Layout';
 import '../../assets/css/allRooms.css';
+import fetchRooms from "../../api/fetchRooms.js";
 
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
-import serachIcon from '../../assets/img/search.png';
+import searchIcon from '../../assets/img/search.png';
+import {useEffect, useState} from "react";
 
 function AllRoomsPage() {
+
+    const [rooms, setRooms] = useState([]);
+
+    useEffect(() => {
+        const getRooms = async () => {
+            try {
+                const roomsData = await fetchRooms();
+                setRooms(roomsData);
+                console.log('Fetched rooms data:', roomsData);
+            } catch (error) {
+                console.error('Error fetching rooms:', error);
+            }
+        };
+        getRooms();
+    }, []);
+
+    useEffect(() => {
+        console.log('Updated rooms:', rooms); // Log whenever rooms changes
+        console.log('Rooms length:', rooms.length); // Log whenever rooms length changes
+        console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
+    }, [rooms]);
+
     const sidebarContent = (
         <div className="sidebar">
             <div className="img-div">
@@ -31,33 +55,27 @@ function AllRoomsPage() {
         <div className="main-content">
             <div className="search-bar">
                 <input type="text" placeholder="Search Rooms"/>
-                <button className="btn" type="submit"><img src={serachIcon} alt="search icon"/></button>
+                <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
             </div>
 
             <div className="rooms-list">
-                <div className="indiv-room available">
-                    <div className="room-left">
-                        <h2>Room Name</h2>
-                        <img src={userIcon} alt="person icon"/>
-                        <p className="people-amount">8/10</p>
-                    </div>
-                    <div className="room-right">
-                        <p className="room-status available">Available</p>
-                        <p className="until">Until 10:30</p>
-                    </div>
-                </div>
-
-                <div className="indiv-room occupied">
-                    <div className="room-left">
-                        <h2>Room Name</h2>
-                        <img src={userIcon} alt="person icon"/>
-                        <p className="people-amount">8/10</p>
-                    </div>
-                    <div className="room-right">
-                        <p className="room-status occupied">Occupied</p>
-                        <p className="until">Until 10:30</p>
-                    </div>
-                </div>
+                {rooms.length > 0 ? (
+                    rooms.map(room => (
+                        <div key={room.email} className={`indiv-room border-${room.status}`}>
+                            <div className="room-left">
+                                <h2>{room.name}</h2>
+                                <img src={userIcon} alt="person icon" />
+                                <p className="people-amount">0/{room.maxCapacity}</p>
+                            </div>
+                            <div className="room-right">
+                                <p className={`room-status text-${room.status}`}>{room.status}</p>
+                                <p className="until">Until</p>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No rooms available</p>
+                )}
             </div>
         </div>
     );

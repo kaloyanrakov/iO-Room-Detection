@@ -1,9 +1,10 @@
 import axios from "axios";
-import.meta.env.BASE_API_URL;
+
+const BASE_API_URL = "https://graph.microsoft.com/v1.0";
 
 const MeetingRoomApi = {
     getAllMeetingRooms: (placeId, pageIndex, pageSize) => 
-    axios.get(`${BASE_API_URL}/rooms`, {
+    axios.get(`${BASE_API_URL}/places/microsoft.graph.room`, {
         placeId: placeId,
         pageIndex: pageIndex,
         pageSize: pageSize

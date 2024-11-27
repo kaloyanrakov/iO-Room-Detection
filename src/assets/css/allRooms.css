@@ -98,6 +98,11 @@ img {
     margin: auto 0;
 }
 
+.room-left h2 {
+    font-size: 1.3rem;
+    font-weight: normal;
+}
+
 .room-left p {
     margin: auto 0;
     font-size: 1.3rem;
@@ -120,20 +125,20 @@ img {
     float: right;
 }
 
-.available {
+.border-AVAILABLE {
     border-left: 10px solid lawngreen;
 }
 
-.occupied {
+.border-OCCUPIED {
     border-left: 10px solid red;
 }
 
-.room-right .available {
+.text-AVAILABLE {
     border: none;
     color: lawngreen;
 }
 
-.room-right .occupied {
+.text-OCCUPIED {
     border: none;
     color: red;
 }
