@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCameraReportResponse {
+public class CreateCameraConnectionResponse {
     private Long cameraId;
 }
