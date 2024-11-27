@@ -1,0 +1,16 @@
+.appointment-card {
+    display: flex;
+    background-color: #294250;
+    color: white;
+    gap: 3em;
+    padding: 0.5em;
+    margin: 0.25em;
+    border-radius: 7px;
+}
+
+.sidebar-buttons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}

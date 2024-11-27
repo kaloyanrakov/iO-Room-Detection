@@ -4,7 +4,7 @@
     flex-direction: column;
 }
 
-img {
+.logo {
     max-width: 100px;
     float: left;
 }
@@ -27,6 +27,10 @@ img {
 }
 
 .btn {
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    padding: 0.6em 1.2em;  
     background-color: #294250;
     color: #EDF9FF;
     border: none;
@@ -37,6 +41,10 @@ img {
     border: 1px solid #EDF9FF;
     }
 
+
+.main-content {
+    height: 100%;
+}
 
 
 .main-content .search-bar {
@@ -141,4 +149,43 @@ img {
 .text-OCCUPIED {
     border: none;
     color: red;
+}
+
+.status{
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 auto;
+    font-size: medium;
+}
+
+.flex { display: flex; }
+.flex-row { flex-direction: row; }
+.flex-col { flex-direction: column; }
+.m-auto { margin: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.px-2 { padding-left: 0.5em; padding-right: 0.5em; }
+
+.people-amount > * {
+    vertical-align: middle;
+}
+
+.people_img {
+    padding: 0 0.5em;
+    height: 30px;
+    width: auto;
+    /* display: flex;
+    justify-content: flex-start; */
+    /* margin: 0 auto; */
+    /* flex-direction: row; */
+    /* size: 3%; */
+}
+
+.text-occupied {
+    color: red;
+}
+.text-available {
+    color: lawngreen;
+}
+.text-meeting_soon {
+    color: #FFDD00;
 }

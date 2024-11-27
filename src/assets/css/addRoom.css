@@ -1,0 +1,24 @@
+.add-room-form {
+    height: 100%;
+    /* display: grid;
+    place-items: center; */
+    display: flex;
+    flex-direction: column;
+}
+
+.add-room-form__wrapper {
+    margin: auto;
+    display: grid;
+    gap: 1em;
+}
+
+.add-room-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    text-align: right;
+}
+
+.add-room-form input {
+    width: 10em;
+}

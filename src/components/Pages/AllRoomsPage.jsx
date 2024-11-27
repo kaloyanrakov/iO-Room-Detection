@@ -33,7 +33,7 @@ function AllRoomsPage() {
     const sidebarContent = (
         <div className="sidebar">
             <div className="img-div">
-                <img src={logo} alt="IO_Logo"/>
+                <img src={logo} className="logo" alt="IO_Logo" />
             </div>
             <h2>Filters</h2>
             <div className="filter">
@@ -80,7 +80,7 @@ function AllRoomsPage() {
         </div>
     );
     return (
-        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent}/>
+        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent} />
     );
 }
 

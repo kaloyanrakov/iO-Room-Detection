@@ -8,7 +8,6 @@ function Layout({sidebarContent, rightSideContent}) {
                 <div className="sidebar">
                     {sidebarContent}
                 </div>
-
                 <div className="right-side">
                     {rightSideContent || <Outlet />}
                 </div>
