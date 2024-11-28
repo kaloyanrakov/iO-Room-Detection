@@ -13,6 +13,7 @@ final class MeetingRoomConverter {
     }
 
     static MeetingRoom convertMeetingRoom(Room room, MeetingRoomEntity meetingRoomEntity, RoomEvent roomEvent, RoomEventStatus status) {
+        // if Room is not yet saved in dbs
         if (meetingRoomEntity == null) {
             return MeetingRoom.builder()
                     .id(0L)

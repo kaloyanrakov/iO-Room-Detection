@@ -2,9 +2,11 @@ package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.controller;
 
 import lombok.AllArgsConstructor;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.GetAllRoomsUseCase;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.GetMeetingRoomUseCase;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.exception.InvalidPlaceException;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetAllRoomsRequest;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetAllRoomsResponse;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetMeetingRoomResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class RoomsController {
 
     private final GetAllRoomsUseCase getAllRoomsUseCase;
+    private final GetMeetingRoomUseCase getMeetingRoomUseCase;
 
     /**
      * @return response
@@ -33,6 +36,12 @@ public class RoomsController {
         request.setPageIndex(pageIndex);
         request.setPageSize(pageSize);
         GetAllRoomsResponse response = getAllRoomsUseCase.getAllRooms(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("{roomId}")
+    public ResponseEntity<GetMeetingRoomResponse> getMeetingRoom(@PathVariable long roomId) {
+        GetMeetingRoomResponse response = getMeetingRoomUseCase.getMeetingRoom(roomId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

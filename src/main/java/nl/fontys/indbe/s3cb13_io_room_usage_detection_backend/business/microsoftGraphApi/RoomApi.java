@@ -32,4 +32,21 @@ public class RoomApi {
         return result.getValue();
     }
 
+    public Room getRoom(String roomEmail) {
+        // default Eindhoven for now
+        String placeId = "rooms.eindhoven@iodigital.com";
+
+        String filter =  String.format("emailAddress eq '%s'", roomEmail);
+
+        RoomCollectionResponse result = graphServiceClient.places().
+                byPlaceId(placeId)
+                .graphRoomList()
+                .rooms()
+                .get(RequestConfiguration -> {
+                    RequestConfiguration.queryParameters.filter = filter;
+                    RequestConfiguration.queryParameters.top = 1;
+                });
+        return result.getValue().get(0);
+    }
+
 }

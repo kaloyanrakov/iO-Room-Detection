@@ -16,19 +16,17 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl.GetRoomEventStatus.getRoomEventStatus;
+
 @Service
 @AllArgsConstructor
 public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
-
-    private final long OFFSET_FOR_OCCUPIED_SOON = 30;
 
     private MeetingRoomRepository meetingRoomRepository;
 
     private RoomApi roomApi;
 
     private GetCurrentRoomEventUseCaseImpl getCurrentRoomEventUseCase;
-
-
 
     /**
      * @return response
@@ -70,26 +68,6 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
         }).toList();
 
         return GetAllRoomsResponse.builder().rooms(meetingRooms).build();
-    }
-
-    private RoomEventStatus getRoomEventStatus(RoomEvent roomEvent) {
-        LocalDateTime now = LocalDateTime.now();
-
-        if (roomEvent == null) {
-            return RoomEventStatus.AVAILABLE;
-        }
-
-        LocalDateTime startTime = roomEvent.getStartTime();
-        LocalDateTime endTime = roomEvent.getEndTime();
-
-        if ((startTime.isBefore(now) || startTime.equals(now)) && endTime.isAfter(now)) {
-            return RoomEventStatus.OCCUPIED_NOW;
-        }
-        LocalDateTime offset = startTime.minusMinutes(OFFSET_FOR_OCCUPIED_SOON);
-        if (startTime.isAfter(now) && (offset.isAfter(now) || offset.equals(now))) {
-                return RoomEventStatus.OCCUPIED_SOON;
-        }
-        return RoomEventStatus.AVAILABLE;
     }
 
 }
