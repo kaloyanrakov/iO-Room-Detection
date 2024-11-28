@@ -72,7 +72,7 @@ public class SendWarningEarlyVacatedRoom {
 //    }
 
     public void sendWarning(String recipientEmail, String recipientName, String senderEmail) {
-        String fromEmailId = "506052@student.fontys.nl";
+        String fromEmailId = "kaloyan.rakov@iodigital.com";
         if (senderEmail != null) {
             fromEmailId = senderEmail;
         }
