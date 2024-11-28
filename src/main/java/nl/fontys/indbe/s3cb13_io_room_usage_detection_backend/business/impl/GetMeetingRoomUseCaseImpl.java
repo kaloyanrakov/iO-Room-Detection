@@ -30,18 +30,6 @@ public class GetMeetingRoomUseCaseImpl implements GetMeetingRoomUseCase {
     public GetMeetingRoomResponse getMeetingRoom(long roomId) {
         MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.findById(roomId).orElse(null);
 
-        if (roomId == 1) {
-            meetingRoomEntity = MeetingRoomEntity.builder()
-                    .id(1L)
-                    .email("jupiter.eindhoven@iodigital.com")
-                    .currentCapacity(0)
-                    .cameraConnection(CameraConnectionEntity.builder()
-                            .id(1L)
-                            .macAddress("00-50-56-C0-00-01")
-                            .build())
-                    .build();
-        }
-
         if (meetingRoomEntity == null) {
             throw new InvalidRoomIdException("Invalid Room Id");
         }
