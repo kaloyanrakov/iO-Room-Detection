@@ -10,16 +10,14 @@ final class RoomEventConverter {
 
     public static RoomEvent convertRoomEvent(Event event) {
         final String TIMEZONE_SUFFIX_UTC = "Z";
-        final String TIMEZONE_SUFFIX_CET = "ECT";
 
         LocalDateTime startDateTime = DateTimeConverter.convertUtcToLocal(event.getStart().getDateTime() + TIMEZONE_SUFFIX_UTC, TIMEZONE_SUFFIX_UTC);
         LocalDateTime endDateTime = DateTimeConverter.convertUtcToLocal(event.getEnd().getDateTime() + TIMEZONE_SUFFIX_UTC, TIMEZONE_SUFFIX_UTC);
 
-        RoomEvent roomEvent = RoomEvent.builder()
+        return RoomEvent.builder()
                 .roomEmail(event.getLocation().getLocationUri())
                 .startTime(startDateTime)
                 .endTime(endDateTime)
                 .build();
-        return roomEvent;
     }
 }
