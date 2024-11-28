@@ -5,12 +5,11 @@ import { useState } from "react";
 
 
 function AddRoomPage() {
-    const [name, setName] = useState("");
     const [camera, setCamera] = useState("");
 
     function handleSubmit(event) {
         event.preventDefault();
-        console.log("Room Name:", name);
+    
         console.log("Camera:", camera);
     }
 
@@ -28,18 +27,6 @@ function AddRoomPage() {
             <form className="add-room-form" onSubmit={handleSubmit}>
                 <div className="add-room-form__wrapper">
                     <div className="add-room-form__grid">
-                        <label htmlFor="roomName">
-                            Room Name:
-                        </label>
-                        <input
-                            type="text"
-                            name="roomName"
-                            id="roomName"
-                            required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-
                         <label htmlFor="roomCamera">
                             Camera:
                         </label>
@@ -49,7 +36,7 @@ function AddRoomPage() {
                             value={camera}
                             onChange={(e) => setCamera(e.target.value)}
                         >
-                            {/* Add empty first option */}
+                            
                             <option value="" disabled>
                                 Select a camera
                             </option>
