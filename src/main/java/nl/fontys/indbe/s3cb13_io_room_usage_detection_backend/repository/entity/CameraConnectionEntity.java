@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Camera_Connection")
 @Builder
@@ -23,4 +25,6 @@ public class CameraConnectionEntity {
     @Pattern(regexp = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$", message = "invalid format")
     @Column(name = "mac_address")
     private String macAddress;
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 }
