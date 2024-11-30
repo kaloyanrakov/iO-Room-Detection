@@ -42,8 +42,8 @@ public class GetRoomEventsUseCaseImpl implements GetRoomEventsUseCase {
         String replacedEmail = "jupiter.eindhoven@iodigital.com";
         String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
 
-        if (meetingRoomEntity.getEmail().equals(replacementEmail)) {
-            return eventApi.getRoomEvents(replacedEmail, request.getStartTime(), request.getEndTime());
+        if (meetingRoomEntity.getEmail().equals(replacedEmail)) {
+            return eventApi.getRoomEvents(replacementEmail, request.getStartTime(), request.getEndTime());
         }
         else {
             return eventApi.getRoomEvents(meetingRoomEntity.getEmail(),request.getStartTime(),request.getEndTime());

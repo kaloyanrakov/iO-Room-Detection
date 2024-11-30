@@ -25,7 +25,6 @@ public class EventApi {
                 nowUtc, nowUtc, nowUtc
         );
 
-
         EventCollectionResponse result = graphServiceClient.users()
                 .byUserId(roomEmail)
                 .calendar()
@@ -45,7 +44,6 @@ public class EventApi {
 
     public List<Event> getRoomEvents(String roomEmail, LocalDateTime startDate, LocalDateTime endDate) {
         final String TIMEZONE_SUFFIX_UTC = "Z";
-
 
         String filter = String.format(
                 "start/dateTime ge '%s' and end/dateTime le '%s'",

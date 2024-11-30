@@ -15,4 +15,5 @@ public class RoomEvent {
     private String roomEmail;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String organizerName;
 }

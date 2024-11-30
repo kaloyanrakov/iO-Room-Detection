@@ -1,6 +1,7 @@
 package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.controller;
 
 import lombok.AllArgsConstructor;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.exception.InvalidRoomIdException;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl.GetRoomEventsUseCaseImpl;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetRoomEventsRequest;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetRoomEventsResponse;
@@ -32,6 +33,15 @@ public class EventsController {
                     .endTime(LocalDateTime.parse(endDate))
                     .build();
         }
+        else if (startDate != null) {
+            LocalDateTime startTime = LocalDateTime.parse(startDate);
+            LocalDateTime endTime = LocalTime.MAX.atDate(LocalDate.parse(startDate));
+            request = GetRoomEventsRequest.builder()
+                    .roomId(roomId)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .build();
+        }
         else{
             request = GetRoomEventsRequest.builder()
                     .roomId(roomId)
@@ -42,5 +52,11 @@ public class EventsController {
 
         GetRoomEventsResponse response = getRoomEventsUseCase.getRoomEvents(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @ExceptionHandler(InvalidRoomIdException.class)
+    @ResponseBody
+    public ResponseEntity<Object> handleInvalidRoomIdException(InvalidRoomIdException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

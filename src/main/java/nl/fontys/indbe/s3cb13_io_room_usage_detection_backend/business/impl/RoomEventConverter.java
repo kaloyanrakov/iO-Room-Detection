@@ -18,6 +18,7 @@ final class RoomEventConverter {
                 .roomEmail(event.getLocation().getLocationUri())
                 .startTime(startDateTime)
                 .endTime(endDateTime)
+                .organizerName(event.getOrganizer().getEmailAddress().getName())
                 .build();
     }
 }
