@@ -40,6 +40,10 @@ public class CreateRoomUseCaseImpl implements CreateRoomUseCase {
                 .cameraConnection(cameraConnectionEntity.get())
                 .build();
 
+        if (request.getId() > 0) {
+            newMeetingRoom.setId(request.getId());
+        }
+
         return this.meetingRoomRepository.save(newMeetingRoom);
     }
 }

@@ -13,6 +13,8 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateRoomRequest {
+    @Min(0)
+    private long id;
     @NotBlank
     @Length(max = 100)
     private String email;
