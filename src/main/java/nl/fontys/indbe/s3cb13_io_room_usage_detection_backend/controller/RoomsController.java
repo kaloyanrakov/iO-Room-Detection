@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rooms")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class RoomsController {
 
     private final GetAllRoomsUseCase getAllRoomsUseCase;

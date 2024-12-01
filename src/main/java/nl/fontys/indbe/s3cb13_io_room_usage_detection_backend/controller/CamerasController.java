@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/cameras")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class CamerasController {
 
     private final CreateCameraConnectionUseCase createCameraConnectionUseCase;

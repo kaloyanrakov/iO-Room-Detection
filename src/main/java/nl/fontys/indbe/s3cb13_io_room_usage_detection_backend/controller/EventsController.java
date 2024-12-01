@@ -16,6 +16,7 @@ import java.time.LocalTime;
 @RestController
 @RequestMapping("/events")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class EventsController {
 
     private GetRoomEventsUseCaseImpl getRoomEventsUseCase;
