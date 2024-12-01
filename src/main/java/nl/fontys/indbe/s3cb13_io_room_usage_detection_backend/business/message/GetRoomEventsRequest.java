@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class GetRoomEventsRequest {
     private Long roomId;
+    private String roomEmail;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }

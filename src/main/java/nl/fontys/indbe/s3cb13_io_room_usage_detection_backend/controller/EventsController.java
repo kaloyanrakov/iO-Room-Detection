@@ -55,6 +55,40 @@ public class EventsController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/email/{roomEmail}")
+    public ResponseEntity<GetRoomEventsResponse> getRoomEvents(@PathVariable String roomEmail,
+                                                               @RequestParam(value = "startDate", required = false) String startDate,
+                                                               @RequestParam(value = "endDate", required = false) String endDate) {
+        GetRoomEventsRequest request;
+
+        if (startDate != null && endDate != null) {
+            request = GetRoomEventsRequest.builder()
+                    .roomEmail(roomEmail)
+                    .startTime(LocalDateTime.parse(startDate))
+                    .endTime(LocalDateTime.parse(endDate))
+                    .build();
+        }
+        else if (startDate != null) {
+            LocalDateTime startTime = LocalDateTime.parse(startDate);
+            LocalDateTime endTime = LocalTime.MAX.atDate(LocalDate.parse(startDate));
+            request = GetRoomEventsRequest.builder()
+                    .roomEmail(roomEmail)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .build();
+        }
+        else{
+            request = GetRoomEventsRequest.builder()
+                    .roomEmail(roomEmail)
+                    .startTime(LocalDate.now().atStartOfDay())
+                    .endTime(LocalTime.MAX.atDate(LocalDate.now()))
+                    .build();
+        }
+
+        GetRoomEventsResponse response = getRoomEventsUseCase.getRoomEvents(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @ExceptionHandler(InvalidRoomIdException.class)
     @ResponseBody
     public ResponseEntity<Object> handleInvalidRoomIdException(InvalidRoomIdException ex) {

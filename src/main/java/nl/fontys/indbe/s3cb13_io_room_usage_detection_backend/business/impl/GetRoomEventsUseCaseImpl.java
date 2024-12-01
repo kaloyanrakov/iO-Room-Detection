@@ -12,6 +12,7 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.Meeting
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.entity.MeetingRoomEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,13 +24,9 @@ public class GetRoomEventsUseCaseImpl implements GetRoomEventsUseCase {
 
     @Override
     public GetRoomEventsResponse getRoomEvents(GetRoomEventsRequest request) {
-        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.findById(request.getRoomId()).orElse(null);
+        String email = getEmailFromRequest(request);
 
-        if  (meetingRoomEntity == null) {
-            throw new InvalidRoomIdException("Invalid room id");
-        }
-
-        List<Event> roomEvents = getRoomEvents(meetingRoomEntity, request);
+        List<Event>roomEvents = getRoomEventsApi(email, request.getStartTime(), request.getEndTime());
 
         List<RoomEvent> roomEventList = roomEvents.stream()
                 .map(RoomEventConverter::convertRoomEvent)
@@ -38,15 +35,23 @@ public class GetRoomEventsUseCaseImpl implements GetRoomEventsUseCase {
         return GetRoomEventsResponse.builder().roomEvents(roomEventList).build();
     }
 
-    private List<Event> getRoomEvents(MeetingRoomEntity meetingRoomEntity, GetRoomEventsRequest request) {
+    private String getEmailFromRequest(GetRoomEventsRequest request) {
+        if (request.getRoomEmail() != null) {
+            return request.getRoomEmail();
+        }
+        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new InvalidRoomIdException("Invalid room ID: " + request.getRoomId()));
+        return meetingRoomEntity.getEmail();
+    }
+
+    private List<Event> getRoomEventsApi(String email, LocalDateTime startTime, LocalDateTime endTime) {
+        String resolvedEmail = getEmail(email);
+        return eventApi.getRoomEvents(resolvedEmail, startTime, endTime);
+    }
+
+    private String getEmail(String email) {
         String replacedEmail = "jupiter.eindhoven@iodigital.com";
         String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
-
-        if (meetingRoomEntity.getEmail().equals(replacedEmail)) {
-            return eventApi.getRoomEvents(replacementEmail, request.getStartTime(), request.getEndTime());
-        }
-        else {
-            return eventApi.getRoomEvents(meetingRoomEntity.getEmail(),request.getStartTime(),request.getEndTime());
-        }
+        return replacedEmail.equals(email) ? replacementEmail : email;
     }
 }

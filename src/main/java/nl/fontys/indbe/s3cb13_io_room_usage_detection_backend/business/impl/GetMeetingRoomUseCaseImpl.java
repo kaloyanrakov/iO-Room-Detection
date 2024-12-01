@@ -11,7 +11,6 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.domain.MeetingRoom
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.domain.RoomEvent;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.domain.RoomEventStatus;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.MeetingRoomRepository;
-import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.entity.CameraConnectionEntity;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.entity.MeetingRoomEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,35 +27,54 @@ public class GetMeetingRoomUseCaseImpl implements GetMeetingRoomUseCase {
 
     @Override
     public GetMeetingRoomResponse getMeetingRoom(long roomId) {
-        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.findById(roomId).orElse(null);
+        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.findById(roomId)
+                .orElseThrow(() -> new InvalidRoomIdException("Invalid Room Id"));
+        return buildMeetingRoomResponse(meetingRoomEntity);
+    }
+
+    @Override
+    public GetMeetingRoomResponse getMeetingRoom(String roomEmail) {
+        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.getMeetingRoomEntityByEmail(roomEmail);
 
         if (meetingRoomEntity == null) {
-            throw new InvalidRoomIdException("Invalid Room Id");
+            return buildMeetingRoomResponse(roomEmail);
         }
+        return buildMeetingRoomResponse(meetingRoomEntity);
+    }
 
-        Room room = getRoom(meetingRoomEntity);
-
-        RoomEvent roomEvent = null;
-        try {
-            roomEvent = getCurrentRoomEventUseCase.getCurrentRoomEvent(room.getEmailAddress());
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    private GetMeetingRoomResponse buildMeetingRoomResponse(MeetingRoomEntity meetingRoomEntity) {
+        Room room = getRoomByEmail(meetingRoomEntity.getEmail());
+        RoomEvent roomEvent = getCurrentRoomEvent(room.getEmailAddress());
         RoomEventStatus status = getRoomEventStatus(roomEvent);
 
         MeetingRoom meetingRoom = MeetingRoomConverter.convertMeetingRoom(room, meetingRoomEntity, roomEvent, status);
         return GetMeetingRoomResponse.builder().meetingRoom(meetingRoom).build();
     }
 
-    private Room getRoom(MeetingRoomEntity meetingRoomEntity) {
+    private GetMeetingRoomResponse buildMeetingRoomResponse(String email) {
+        Room room = getRoomByEmail(email);
+        RoomEvent roomEvent = getCurrentRoomEvent(room.getEmailAddress());
+        RoomEventStatus status = getRoomEventStatus(roomEvent);
+
+        // Null for MeetingRoomEntity
+        MeetingRoom meetingRoom = MeetingRoomConverter.convertMeetingRoom(room, null, roomEvent, status);
+        return GetMeetingRoomResponse.builder().meetingRoom(meetingRoom).build();
+    }
+
+    private Room getRoomByEmail(String email) {
         String replacedEmail = "jupiter.eindhoven@iodigital.com";
         String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
 
-        if (meetingRoomEntity.getEmail().equals(replacementEmail)) {
-            return roomApi.getRoom(replacedEmail);
-        }
-         return roomApi.getRoom(meetingRoomEntity.getEmail());
+        String resolvedEmail = replacementEmail.equals(email) ? replacedEmail : email;
+        return roomApi.getRoom(resolvedEmail);
+    }
 
+    private RoomEvent getCurrentRoomEvent(String email) {
+        try {
+            return getCurrentRoomEventUseCase.getCurrentRoomEvent(email);
+        } catch (Exception e) {
+            System.err.println("Error fetching room event for email: " + email + " - " + e.getMessage());
+            return null; // Return null -> error
+        }
     }
 }

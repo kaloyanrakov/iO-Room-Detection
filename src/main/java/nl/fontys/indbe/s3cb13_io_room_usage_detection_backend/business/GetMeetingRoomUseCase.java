@@ -4,4 +4,5 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.G
 
 public interface GetMeetingRoomUseCase {
     GetMeetingRoomResponse getMeetingRoom(long roomId);
+    GetMeetingRoomResponse getMeetingRoom(String roomEmail);
 }

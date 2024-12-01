@@ -46,6 +46,12 @@ public class RoomsController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/email/{roomEmail}")
+    public ResponseEntity<GetMeetingRoomResponse> getMeetingRoom(@PathVariable String roomEmail) {
+        GetMeetingRoomResponse response = getMeetingRoomUseCase.getMeetingRoom(roomEmail);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @ExceptionHandler(InvalidPlaceException.class)
     @ResponseBody
     public ResponseEntity<Object> handleInvalidPlaceException(InvalidPlaceException ex) {
