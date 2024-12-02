@@ -6,8 +6,6 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.CreateCam
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionRequest;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.GetCameraConnectionsUseCase;
-import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraReportRequest;
-import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraReportResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetCameraConnectionsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,5 +1,6 @@
 package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.CreateCameraConnectionUseCase;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionRequest;
@@ -17,6 +18,7 @@ public class CreateCameraConnectionUseCaseImpl implements CreateCameraConnection
     private final CameraConnectionRepository cameraConnectionRepository;
     private final MeetingRoomRepository meetingRoomRepository;
 
+    @Transactional
     @Override
     public CreateCameraConnectionResponse createCameraConnection(CreateCameraConnectionRequest request) {
 
