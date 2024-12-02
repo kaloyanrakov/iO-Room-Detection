@@ -1,9 +1,13 @@
 package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.CreateRoomUseCase;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.GetAllRoomsUseCase;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.GetMeetingRoomUseCase;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.exception.InvalidPlaceException;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateRoomRequest;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateRoomResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetAllRoomsRequest;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetAllRoomsResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetMeetingRoomResponse;
@@ -16,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class RoomsController {
-
+    private final CreateRoomUseCase createRoomUseCase;
     private final GetAllRoomsUseCase getAllRoomsUseCase;
     private final GetMeetingRoomUseCase getMeetingRoomUseCase;
 
@@ -56,5 +60,11 @@ public class RoomsController {
     @ResponseBody
     public ResponseEntity<Object> handleInvalidPlaceException(InvalidPlaceException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateRoomResponse> createRoom(@Valid @RequestBody CreateRoomRequest request) {
+        CreateRoomResponse response = this.createRoomUseCase.createRoom(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
