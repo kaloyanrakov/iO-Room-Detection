@@ -1,18 +1,50 @@
 import Layout from "../Layout";
 import logo from '../../assets/img/IO_Logo.png';
 import '../../assets/css/addRoom.css'
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import MeetingRoomApi from "../../api/MeetingRoomApi";
+import CameraApi from "../../api/CameraApi";
+import { useNavigate, useParams } from 'react-router-dom';
 
 
-function AddRoomPage() {
-    const [camera, setCamera] = useState("");
+function UpdateRoomPage() {
+    const [room, setRoom] = useState(null);
+    const [camera, setCamera] = useState(0);
+    const [cameras, setCameras] = useState([]);
+    const navigate = useNavigate();
+    const params = useParams();
 
-    function handleSubmit(event) {
-        event.preventDefault();
-    
-        console.log("Camera:", camera);
+    const fetchRoom = () => {
+        MeetingRoomApi.getMeetingRoomByEmail(params.email)
+            .then(data => setRoom(data))
+            .catch(error => console.log(error));
     }
 
+    const fetchCameras = () => {
+        CameraApi.getCameras()
+            .then(data => setCameras(data))
+            .catch(error => console.log(error));
+    }
+
+    const handleSubmit = e =>  {
+        e.preventDefault();
+        const newMeetingRoom = {
+            email: room.email,
+            cameraConnectionId: camera
+        }
+        MeetingRoomApi.createMeetingRoom(newMeetingRoom)
+            .then(() => navigate(`/rooms/${params.id}`))
+            .catch(error => console.log(error));
+    }
+
+    const cameraChanged = e => {
+        setCamera(e.target.value);
+    }
+
+    useEffect(() => {
+        fetchCameras();
+        fetchRoom();
+    }, [])
 
     const sidebar = (
         <div className="sidebar">
@@ -34,12 +66,13 @@ function AddRoomPage() {
                             name="roomCamera"
                             id="roomCamera"
                             value={camera}
-                            onChange={(e) => setCamera(e.target.value)}
-                        >
-                            
-                            <option value="" disabled>
-                                Select a camera
-                            </option>
+                            onChange={cameraChanged}
+                        >  
+                        {cameras.map(camera => {
+                            return (
+                                <option value={camera.id}>{camera.macAddress}</option>
+                            )
+                        })}
                         </select>
                     </div>
                     <button className="btn" type="submit">
@@ -52,4 +85,4 @@ function AddRoomPage() {
     return <Layout sidebarContent={sidebar} rightSideContent={mainContent} />;
 }
 
-export default AddRoomPage;
+export default UpdateRoomPage;

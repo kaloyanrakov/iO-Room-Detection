@@ -1,4 +1,4 @@
-import {Route, Routes, BrowserRouter as Router} from "react-router-dom";
+import {Navigate, Route, Routes, BrowserRouter as Router} from "react-router-dom";
 import AllRoomsPage from './components/Pages/AllRoomsPage';
 import RoomInfoPage from './components/Pages/RoomInfoPage';
 import AddRoomPage from './components/Pages/AddRoomPage';
@@ -14,10 +14,15 @@ function App() {
   return (
       <Router>
           <Routes>
-              <Route path="/rooms" element={<AllRoomsPage />} />
-              <Route path="/roominfo" element={<RoomInfoPage />} />
-              <Route path="/add-room" element={<AddRoomPage />} />
-              <Route path="/update-room" element={<UpdateRoomPage />} />
+              <Route index element={<Navigate to="rooms" replace={true} />} />
+              <Route path="/rooms">
+                <Route index element={<AllRoomsPage />} />
+                <Route path=":email">
+                    <Route index element={<RoomInfoPage />} />
+                    <Route path="update" element={<UpdateRoomPage />} />
+                </Route>
+                <Route path="new" element={<AddRoomPage />} />
+              </Route>
               <Route path="/login" element={<LogInPage />} />
           </Routes>
       </Router>

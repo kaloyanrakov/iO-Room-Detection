@@ -6,6 +6,7 @@ import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
 import searchIcon from '../../assets/img/search.png';
 import {useEffect, useState} from "react";
+import { Link } from 'react-router-dom';
 
 function AllRoomsPage() {
 
@@ -15,7 +16,7 @@ function AllRoomsPage() {
         const getRooms = async () => {
             try {
                 const roomsData = await fetchRooms();
-                setRooms(roomsData);
+                setRooms(roomsData.reverse());
                 console.log('Fetched rooms data:', roomsData);
             } catch (error) {
                 console.error('Error fetching rooms:', error);
@@ -61,17 +62,19 @@ function AllRoomsPage() {
             <div className="rooms-list">
                 {rooms.length > 0 ? (
                     rooms.map(room => (
-                        <div key={room.email} className={`indiv-room border-${room.status}`}>
-                            <div className="room-left">
-                                <h2>{room.name}</h2>
-                                <img src={userIcon} alt="person icon" />
-                                <p className="people-amount">0/{room.maxCapacity}</p>
+                        <Link to={room.email.toString()}>
+                            <div key={room.email} className={`indiv-room border-${room.status}`}>
+                                <div className="room-left">
+                                    <h2>{room.name}</h2>
+                                    <img src={userIcon} alt="person icon" />
+                                    <p className="people-amount">0/{room.maxCapacity}</p>
+                                </div>
+                                <div className="room-right">
+                                    <p className={`room-status text-${room.status}`}>{room.status}</p>
+                                    <p className="until">Until</p>
+                                </div>
                             </div>
-                            <div className="room-right">
-                                <p className={`room-status text-${room.status}`}>{room.status}</p>
-                                <p className="until">Until</p>
-                            </div>
-                        </div>
+                        </Link>
                     ))
                 ) : (
                     <p>No rooms available</p>

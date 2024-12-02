@@ -3,6 +3,11 @@ import '../../assets/css/roominfo.css';
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
 import serachIcon from '../../assets/img/search.png';
+import MeetingRoomApi from "../../api/MeetingRoomApi";
+import EventApi from "../../api/EventApi";
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 /**
  * 
@@ -15,31 +20,30 @@ function formatDate(date) {
         }`);
 
 }
-const sidebarContent = (
-    <div className="sidebar">
-        <div className="img-div">
-            <img src={logo} className="logo" alt="IO_Logo" />
-        </div>
-        <h2>Room Name</h2>
-        <div className="filter">
-            <h1 className="status">Status: <span className="text-occupied">Occupied</span></h1>
-        </div>
-        <br />
-        <div className="room-right-image">
-            <PeopleAmount label="8/10" />
-        </div>
-    </div>
-);
+// const sidebarContent = (
+//     <div className="sidebar">
+//         <div className="img-div">
+//             <img src={logo} className="logo" alt="IO_Logo" />
+//         </div>
+//         <h2>Room Name</h2>
+//         <div className="filter">
+//             <h1 className="status">Status: <span className="text-occupied">Occupied</span></h1>
+//         </div>
+//         <br />
+//         <div className="room-right-image">
+//             <PeopleAmount label="8/10" />
+//         </div>
+//     </div>
+// );
 
 function Appointment({ appointment, nthPerson }) {
-    const { name, from, to } = appointment;
     return <div aria-label="Appointment" className='appointment-card'>
         <span aria-label="Time span">
-            {formatDate(from)} - {formatDate(to)}
+            {formatDate(new Date(appointment.startTime))} - {formatDate(new Date(appointment.endTime))}
         </span>
         <div className="appointment-person">
-            <span>{name}</span>
-            <PeopleAmount label={String(nthPerson)} />
+            <span>{appointment.organizerName}</span>
+            <PeopleAmount label="-" />
         </div>
     </div>
 }
@@ -54,13 +58,42 @@ function PeopleAmount({ label }) {
 }
 
 function RoomInfoPage() {
-    const roomStatus = 'occupied';
+    const initialRoomState = {
+        id: 0,
+        email: "",
+        name: "",
+        maxCapacity: 0,
+        cameraConnection: null,
+        currentCapacity: 0,
+        status: "",
+        roomEvent: null
+    }
+    const [room, setRoom] = useState(initialRoomState);
+    const [events, setEvents] = useState([]);
+    const params = useParams();
 
-    const statusElem = roomStatus == 'occupied'
+    const fetchRoom = () => {
+        MeetingRoomApi.getMeetingRoomByEmail(params.email)
+            .then(data => setRoom(data))
+            .catch(error => console.log(error));
+    }
+
+    const fetchEvents = () => {
+        EventApi.getEventsByEmail(params.email)
+            .then(data => setEvents(data))
+            .catch(error => console.log(error));
+    }
+
+    useEffect(() => {
+        fetchRoom();
+        fetchEvents();
+    }, [room.currentCapacity])
+
+    const statusElem = room.status === 'OCCUPIED_NOW'
         ? <span className="text-occupied">Occupied</span>
-        : (roomStatus === 'available'
+        : (room.status === 'AVAILABLE'
             ? <span className="text-available">Available</span>
-            : (roomStatus === 'meeting_soon'
+            : (room.status === 'OCCUPIED_SOON'
                 ? <span className="text-meeting_soon">Meeting soon</span>
                 : <span>Unknown</span>));
 
@@ -69,47 +102,49 @@ function RoomInfoPage() {
             <div className="img-div">
                 <img src={logo} className="logo" alt="IO_Logo" />
             </div>
-            <h2>Room Name</h2>
+            <h2>{room.name}</h2>
             <div className="filter">
                 <h1 className="status">Status: &nbsp; {statusElem}</h1>
             </div>
             <br />
             <div className="room-right-image">
-                <PeopleAmount label="8/10" />
+                <PeopleAmount label={`${room.currentCapacity}/10`} />
             </div>
             <div className="sidebar-buttons">
                 <button className="btn btn-delete" onClick={() => handleDeleteRoom()}>
                     Delete Room
                 </button>
-                <button className="btn btn-update" onClick={() => handleUpdateRoom()}>
-                    Update Room
+                <button className="btn btn-update">
+                    <Link to="update">
+                        Update Room
+                    </Link>
                 </button>
             </div>
         </div >
     );
 
 
-    const appointments = [
-        {
-            id: 1,
-            name: 'Mark Fishbark',
-            from: new Date('2024-11-12 09:00'), // 2024-11-12 09:00
-            to: new Date('2024-11-12 10:30'), // 2024-11-12 10:30
-        },
-        {
-            id: 2,
+    // const appointments = [
+    //     {
+    //         id: 1,
+    //         name: 'Mark Fishbark',
+    //         from: new Date('2024-11-12 09:00'), // 2024-11-12 09:00
+    //         to: new Date('2024-11-12 10:30'), // 2024-11-12 10:30
+    //     },
+    //     {
+    //         id: 2,
 
-            name: 'Justin Case',
-            from: new Date('2024-11-12 11:00'), // 2024-11-12 11:00
-            to: new Date('2024-11-12 11:30'), // 2024-11-12 11:30
-        },
-        {
-            id: 3,
-            name: 'Dave Jobs',
-            from: new Date('2024-11-12 13:00'), // 2024-11-12 13:00
-            to: new Date('2024-11-12 14:00'), // 2024-11-12 14:00
-        },
-    ];
+    //         name: 'Justin Case',
+    //         from: new Date('2024-11-12 11:00'), // 2024-11-12 11:00
+    //         to: new Date('2024-11-12 11:30'), // 2024-11-12 11:30
+    //     },
+    //     {
+    //         id: 3,
+    //         name: 'Dave Jobs',
+    //         from: new Date('2024-11-12 13:00'), // 2024-11-12 13:00
+    //         to: new Date('2024-11-12 14:00'), // 2024-11-12 14:00
+    //     },
+    // ];
 
     const mainContent = (
         <div className="main-content">
@@ -119,8 +154,8 @@ function RoomInfoPage() {
             </div>
 
             <div className="appointments-list">
-                {appointments.map((appointment, idx) => (
-                    <Appointment appointment={appointment} nthPerson={idx + 1} key={appointment.id} />
+                {events.map((event, idx) => (
+                    <Appointment appointment={event} nthPerson={idx + 1} key={idx + 1} />
                 ))}
             </div>
         </div>
