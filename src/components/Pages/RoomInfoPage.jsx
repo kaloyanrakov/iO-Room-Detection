@@ -89,10 +89,19 @@ function RoomInfoPage() {
             .catch(error => console.log(error));
     }
 
+    // useEffect(() => {
+    //     fetchRoom();
+    //     fetchEvents();
+    // }, [room.currentCapacity])
+
     useEffect(() => {
-        fetchRoom();
-        fetchEvents();
-    }, [room.currentCapacity])
+        const interval = setInterval(() => {
+            fetchRoom();
+            fetchEvents();
+        }, 5000);
+      
+        return () => clearInterval(interval);
+      }, []);
 
     const statusElem = room.status === 'OCCUPIED_NOW'
         ? <span className="text-occupied">Occupied</span>
