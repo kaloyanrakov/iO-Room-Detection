@@ -1,3 +1,8 @@
+a {
+    text-decoration: none;
+    color: white;
+}
+
 
 .sidebar{
     display: flex;
@@ -43,7 +48,8 @@
 
 
 .main-content {
-    height: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
 

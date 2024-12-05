@@ -1,5 +1,6 @@
-import iOLogo from './assets/iO-logo.jpg';
-import styles from './LogInPage.module.css';
+import iOLogo from '../../assets/img/iO-logo.jpg';
+import styles from '../../assets/css/LoginPage.module.css';
+
 import { useState } from 'react';
 
 const LogInPage = () => {

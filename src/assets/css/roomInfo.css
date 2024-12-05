@@ -8,6 +8,10 @@
     border-radius: 7px;
 }
 
+.appointment-person{
+    float: right;
+}
+
 .sidebar-buttons {
     margin-top: auto;
     display: flex;

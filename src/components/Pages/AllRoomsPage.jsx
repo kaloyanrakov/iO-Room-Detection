@@ -35,10 +35,11 @@ function AllRoomsPage() {
         console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
     }, [rooms]);
 
+
     const sidebarContent = (
         <div className="sidebar">
             <div className="img-div">
-                <img src={logo} className="logo" alt="IO_Logo" />
+                <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
             </div>
             <h2>Filters</h2>
             <div className="filter">
@@ -65,21 +66,35 @@ function AllRoomsPage() {
 
             <div className="rooms-list">
                 {rooms.length > 0 ? (
-                    rooms.map(room => (
-                        <Link to={room.email.toString()}>
-                            <div key={room.email} className={`indiv-room border-${room.status}`}>
-                                <div className="room-left">
-                                    <h2>{formatName(room.name)}</h2>
-                                    <img src={userIcon} alt="person icon" />
-                                    <p className="people-amount">0/{room.maxCapacity}</p>
-                                </div>
-                                <div className="room-right">
-                                    <p className={`room-status text-${room.status}`}>{room.status}</p>
-                                    <p className="until">Until</p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))
+                    // Sort rooms by floor before mapping
+                    [...rooms]
+                        .sort((a, b) => {
+                            const floorA = parseInt(a.name.split(" - ")[1]); // Extract floor number
+                            const floorB = parseInt(b.name.split(" - ")[1]);
+                            return floorB - floorA; // Sort ascending
+                        })
+                        .map(room => {
+                            // Extract parts of the name and reformat
+                            const [campus, floor, ...nameParts] = room.name.split(" - ");
+                            const roomName = nameParts.join(" ");
+                            const formattedRoomName = `${roomName} - Floor ${floor}`;
+
+                            return (
+                                <Link to={room.email.toString()} key={room.email}>
+                                    <div className={`indiv-room border-${room.status}`}>
+                                        <div className="room-left">
+                                            <h2>{formattedRoomName}</h2>
+                                            <img src={userIcon} alt="person icon"/>
+                                            <p className="people-amount">0/{room.maxCapacity}</p>
+                                        </div>
+                                        <div className="room-right">
+                                            <p className={`room-status text-${room.status}`}>{room.status}</p>
+                                            <p className="until">Until</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })
                 ) : (
                     <p>No rooms available</p>
                 )}
@@ -87,7 +102,7 @@ function AllRoomsPage() {
         </div>
     );
     return (
-        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent} />
+        <Layout sidebarContent={sidebarContent} rightSideContent={mainContent}/>
     );
 }
 
