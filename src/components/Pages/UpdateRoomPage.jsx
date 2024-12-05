@@ -103,7 +103,7 @@ function UpdateRoomPage() {
                         >  
                         {cameras.map(camera => {
                             return (
-                                <option value={camera.id}>{camera.macAddress}</option>
+                                <option value={camera.id} key={camera.id}>{camera.macAddress}</option>
                             )
                         })}
                         </select>
