@@ -6,17 +6,22 @@
 
 body {
     height: 100vh;
+    width: 100%;
     margin: 0;
-    display: flex;
     background-color: #edf9ff;
     color: #fff;
     font-size: 1.2rem;
+    overflow-y: auto;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .container {
     display: flex;
-    width: 100%;
-    height: 100vh;
+    flex-direction: row;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto
 }
 
 .sidebar {
@@ -44,10 +49,22 @@ body {
 
 .right-side {
     position: fixed;
+    overflow-y: auto;
     width: 80%;
     height: 100%;
     top: 0;
     left: 20%;
     background-color: #EDF9FF;
     color: #294250;
+}
+
+input, select {
+    background-color: #EDF9FF;
+    color: #294250;
+    border: 1px solid #6B9AB3;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #4A90E2;
 }

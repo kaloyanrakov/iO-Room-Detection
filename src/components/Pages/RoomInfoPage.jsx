@@ -20,21 +20,6 @@ function formatDate(date) {
         }`);
 
 }
-// const sidebarContent = (
-//     <div className="sidebar">
-//         <div className="img-div">
-//             <img src={logo} className="logo" alt="IO_Logo" />
-//         </div>
-//         <h2>Room Name</h2>
-//         <div className="filter">
-//             <h1 className="status">Status: <span className="text-occupied">Occupied</span></h1>
-//         </div>
-//         <br />
-//         <div className="room-right-image">
-//             <PeopleAmount label="8/10" />
-//         </div>
-//     </div>
-// );
 
 function Appointment({ appointment, nthPerson }) {
     return <div aria-label="Appointment" className='appointment-card'>
@@ -100,9 +85,19 @@ function RoomInfoPage() {
     const sidebarContent = (
         <div className="sidebar">
             <div className="img-div">
-                <img src={logo} className="logo" alt="IO_Logo" />
+                <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
             </div>
-            <h2>{room.name}</h2>
+
+            {/* Format the room name */}
+            <h2>
+                {(() => {
+                    // Split the room name and format it
+                    const [campus, floor, ...nameParts] = room.name.split(" - ");
+                    const roomName = nameParts.join(" ");
+                    return `${roomName} - Floor ${floor}`;
+                })()}
+            </h2>
+
             <div className="filter">
                 <h1 className="status">Status: &nbsp; {statusElem}</h1>
             </div>
@@ -111,40 +106,14 @@ function RoomInfoPage() {
                 <PeopleAmount label={`${room.currentCapacity}/10`} />
             </div>
             <div className="sidebar-buttons">
-                <button className="btn btn-delete" onClick={() => handleDeleteRoom()}>
-                    Delete Room
-                </button>
                 <button className="btn btn-update">
                     <Link to="update">
                         Update Room
                     </Link>
                 </button>
             </div>
-        </div >
+        </div>
     );
-
-
-    // const appointments = [
-    //     {
-    //         id: 1,
-    //         name: 'Mark Fishbark',
-    //         from: new Date('2024-11-12 09:00'), // 2024-11-12 09:00
-    //         to: new Date('2024-11-12 10:30'), // 2024-11-12 10:30
-    //     },
-    //     {
-    //         id: 2,
-
-    //         name: 'Justin Case',
-    //         from: new Date('2024-11-12 11:00'), // 2024-11-12 11:00
-    //         to: new Date('2024-11-12 11:30'), // 2024-11-12 11:30
-    //     },
-    //     {
-    //         id: 3,
-    //         name: 'Dave Jobs',
-    //         from: new Date('2024-11-12 13:00'), // 2024-11-12 13:00
-    //         to: new Date('2024-11-12 14:00'), // 2024-11-12 14:00
-    //     },
-    // ];
 
     const mainContent = (
         <div className="main-content">

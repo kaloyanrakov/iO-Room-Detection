@@ -1,6 +1,6 @@
 import Layout from "../Layout";
 import logo from '../../assets/img/IO_Logo.png';
-import '../../assets/css/addRoom.css'
+import '../../assets/css/updateRoom.css'
 import React, { useState, useEffect } from 'react';
 import MeetingRoomApi from "../../api/MeetingRoomApi";
 import CameraApi from "../../api/CameraApi";
@@ -49,7 +49,7 @@ function UpdateRoomPage() {
     const sidebar = (
         <div className="sidebar">
             <div className="img-div">
-                <img src={logo} className="logo" alt="IO_Logo" />
+                <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
             </div>
         </div>
     );

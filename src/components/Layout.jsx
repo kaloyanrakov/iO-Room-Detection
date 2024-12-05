@@ -6,6 +6,7 @@ function Layout({sidebarContent, rightSideContent}) {
         <div>
             <div className="container">
                 <div className="sidebar">
+
                     {sidebarContent}
                 </div>
                 <div className="right-side">
