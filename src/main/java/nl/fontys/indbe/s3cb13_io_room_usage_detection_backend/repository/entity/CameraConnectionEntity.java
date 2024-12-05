@@ -21,6 +21,9 @@ public class CameraConnectionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+    @OneToOne
+    @PrimaryKeyJoinColumn(name="id", referencedColumnName="id")
+    private MeetingRoomEntity meetingRoom;
     @NotBlank
     @Pattern(regexp = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$", message = "invalid format")
     @Column(name = "mac_address")
