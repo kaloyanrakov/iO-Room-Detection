@@ -88,10 +88,8 @@ function RoomInfoPage() {
                 <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
             </div>
 
-            {/* Format the room name */}
             <h2>
                 {(() => {
-                    // Split the room name and format it
                     const [campus, floor, ...nameParts] = room.name.split(" - ");
                     const roomName = nameParts.join(" ");
                     return `${roomName} - Floor ${floor}`;

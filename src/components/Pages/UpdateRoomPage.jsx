@@ -4,11 +4,21 @@ import '../../assets/css/updateRoom.css'
 import React, { useState, useEffect } from 'react';
 import MeetingRoomApi from "../../api/MeetingRoomApi";
 import CameraApi from "../../api/CameraApi";
-import { useNavigate, useParams } from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 
 
 function UpdateRoomPage() {
-    const [room, setRoom] = useState(null);
+    const initialRoomState = {
+        id: 0,
+        email: "",
+        name: "",
+        maxCapacity: 0,
+        cameraConnection: null,
+        currentCapacity: 0,
+        status: "",
+        roomEvent: null
+    }
+    const [room, setRoom] = useState(initialRoomState);
     const [camera, setCamera] = useState(0);
     const [cameras, setCameras] = useState([]);
     const navigate = useNavigate();
@@ -46,10 +56,33 @@ function UpdateRoomPage() {
         fetchRoom();
     }, [])
 
+    // const sidebar = (
+    //     <div className="sidebar">
+    //         <div className="img-div">
+    //             <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
+    //         </div>
+    //     </div>
+    // );
+
     const sidebar = (
         <div className="sidebar">
             <div className="img-div">
                 <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
+            </div>
+
+            <h2>
+                {(() => {
+                    const [campus, floor, ...nameParts] = room.name.split(" - ");
+                    const roomName = nameParts.join(" ");
+                    return `${roomName} - Floor ${floor}`;
+                })()}
+            </h2>
+            <div className="sidebar-buttons">
+                <button className="btn btn-update">
+                    <a href={`/rooms/${room.email}`}>
+                        Cancel
+                    </a>
+                </button>
             </div>
         </div>
     );
