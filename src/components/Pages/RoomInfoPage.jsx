@@ -110,10 +110,7 @@ function RoomInfoPage() {
             <div className="room-right-image">
                 <PeopleAmount label={`${room.currentCapacity}/10`} />
             </div>
-            <div className="sidebar-buttons">
-                <button className="btn btn-delete" onClick={() => handleDeleteRoom()}>
-                    Delete Room
-                </button>
+            <div className="sidebar-buttons">                
                 <button className="btn btn-update">
                     <Link to="update">
                         Update Room
