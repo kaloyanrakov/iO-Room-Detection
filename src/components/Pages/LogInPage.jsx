@@ -1,4 +1,4 @@
-import iOLogo from './assets/iO-logo.jpg';
+import iOLogo from '../../assets/img/iO-logo.jpg';
 import styles from './LogInPage.module.css';
 import { useState } from 'react';
 

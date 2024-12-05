@@ -3,8 +3,9 @@ import AllRoomsPage from './components/Pages/AllRoomsPage';
 import RoomInfoPage from './components/Pages/RoomInfoPage';
 import AddRoomPage from './components/Pages/AddRoomPage';
 import UpdateRoomPage from "./components/Pages/UpdateRoomPage"
+import LogInPage from './components/Pages/LogInPage'
 import { useState } from 'react'
-import LogInPage from './LogInPage.jsx'
+
 
 import './App.css'
 
