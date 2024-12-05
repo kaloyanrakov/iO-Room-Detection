@@ -33,7 +33,7 @@ function UpdateRoomPage() {
             cameraConnectionId: camera
         }
         MeetingRoomApi.createMeetingRoom(newMeetingRoom)
-            .then(() => navigate(`/rooms/${params.id}`))
+            .then(() => navigate(`/rooms/${params.email}`))
             .catch(error => console.log(error));
     }
 
@@ -66,7 +66,7 @@ function UpdateRoomPage() {
                             name="roomCamera"
                             id="roomCamera"
                             value={camera}
-                            onChange={cameraChanged}
+                            onClick={cameraChanged}
                         >  
                         {cameras.map(camera => {
                             return (
