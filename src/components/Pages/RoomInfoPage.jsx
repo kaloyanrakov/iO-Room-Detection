@@ -20,6 +20,11 @@ function formatDate(date) {
         }`);
 
 }
+
+function formatName(name) {
+    return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
+}
+
 // const sidebarContent = (
 //     <div className="sidebar">
 //         <div className="img-div">
@@ -102,7 +107,7 @@ function RoomInfoPage() {
             <div className="img-div">
                 <img src={logo} className="logo" alt="IO_Logo" />
             </div>
-            <h2>{room.name}</h2>
+            <h2>{formatName(room.name)}</h2>
             <div className="filter">
                 <h1 className="status">Status: &nbsp; {statusElem}</h1>
             </div>

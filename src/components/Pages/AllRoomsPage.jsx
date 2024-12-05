@@ -8,6 +8,10 @@ import searchIcon from '../../assets/img/search.png';
 import {useEffect, useState} from "react";
 import { Link } from 'react-router-dom';
 
+function formatName(name) {
+    return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
+}
+
 function AllRoomsPage() {
 
     const [rooms, setRooms] = useState([]);
@@ -65,7 +69,7 @@ function AllRoomsPage() {
                         <Link to={room.email.toString()}>
                             <div key={room.email} className={`indiv-room border-${room.status}`}>
                                 <div className="room-left">
-                                    <h2>{room.name}</h2>
+                                    <h2>{formatName(room.name)}</h2>
                                     <img src={userIcon} alt="person icon" />
                                     <p className="people-amount">0/{room.maxCapacity}</p>
                                 </div>
