@@ -42,8 +42,6 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
             request.setPlaceId("rooms.eindhoven@iodigital.com");
         }
 
-        System.out.println(request.getStatus());
-
         if (request.getFloorNumber() == -1 && request.getStatus().isEmpty()) {
             List<Room> rooms =  roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex() , request.getPageSize());
 
@@ -73,7 +71,7 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
             return GetAllRoomsResponse.builder().rooms(meetingRooms).build();
         }
 
-        List<Room> rooms = roomApi.getAllRooms(request.getPlaceId(), 0, Integer.MAX_VALUE); // Fetch all rooms
+        List<Room> rooms = roomApi.getAllRooms(request.getPlaceId(), 0, Integer.MAX_VALUE);
 
         List<MeetingRoom> filteredRooms = rooms.stream()
                 .filter(room -> request.getFloorNumber() == -1 || extractFloorFromDisplayName(room.getDisplayName()) == request.getFloorNumber())
