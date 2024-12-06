@@ -25,3 +25,7 @@
 select {
     min-width: 10em;
 }
+
+.custom-update-btn {
+    cursor: pointer;
+}

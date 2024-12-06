@@ -1,7 +1,7 @@
 import Layout from '../Layout';
 import '../../assets/css/allRooms.css';
 import fetchRooms from "../../api/fetchRooms.js";
-
+import { useNavigate } from 'react-router-dom'; 
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
 import searchIcon from '../../assets/img/search.png';
@@ -13,6 +13,14 @@ function formatName(name) {
 }
 
 function AllRoomsPage() {
+
+
+    const navigate = useNavigate(); 
+
+    const handleLoginClick = () => {
+        navigate('/login'); 
+    };
+
 
     const [rooms, setRooms] = useState([]);
 
@@ -43,16 +51,32 @@ function AllRoomsPage() {
             </div>
             <h2>Filters</h2>
             <div className="filter">
-                <label>Status: </label>
+                <label>Status:</label>
                 <select name="status" id="status">
                     <option value="available">Available</option>
-                    <option value="o-soon">OccupiedSoon</option>
+                    <option value="o-soon">Occupied Soon</option>
                     <option value="o-now">Occupied Now</option>
+                </select>
+            </div>
+
+            <div className="filter">
+                <label> Floor:</label>
+                <select name="floor" id="floor">
+                    <option value="0">Floor 0</option>
+                    <option value="1">Floor 1</option>
+                    <option value="2">Floor 2</option>
+                    <option value="3">Floor 3</option>
+                    <option value="4">Floor 4</option>
+                    <option value="5">Floor 5</option>
                 </select>
             </div>
             <br/>
             <form>
                 <button className="btn" type="submit">Clear Filters</button>
+            </form>
+            <form>
+            <button className="btn login-btn custom-login-btn" type="button" onClick={handleLoginClick}>
+                Log In</button>
             </form>
         </div>
     );

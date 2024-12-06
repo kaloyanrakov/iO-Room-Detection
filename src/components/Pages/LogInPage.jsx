@@ -1,5 +1,7 @@
 import iOLogo from '../../assets/img/iO-logo.jpg';
 import styles from '../../assets/css/LoginPage.module.css';
+import { useNavigate } from 'react-router-dom'; 
+
 
 import { useState } from 'react';
 
@@ -8,9 +10,13 @@ const LogInPage = () => {
 
   const hardcodedUsername = 'testuser';
   const hardcodedPassword = 'password123';
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+
+
     const form = event.target;
     const username = form.nameOrEmail.value;
     const password = form.password.value;
@@ -18,6 +24,7 @@ const LogInPage = () => {
     if (username === hardcodedUsername && password === hardcodedPassword) {
       setError('');
       alert('Login successful!');
+      navigate('/rooms');
     } else {
       setError('Invalid username or password');
     }
