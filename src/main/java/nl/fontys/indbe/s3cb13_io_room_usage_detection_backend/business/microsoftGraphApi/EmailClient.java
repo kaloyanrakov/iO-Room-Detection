@@ -8,16 +8,14 @@ import com.mailjet.client.transactional.SendEmailsRequest;
 import com.mailjet.client.transactional.TrackOpens;
 import com.mailjet.client.transactional.TransactionalEmail;
 import com.mailjet.client.transactional.response.SendEmailsResponse;
-import com.microsoft.graph.models.*;
-import com.microsoft.graph.serviceclient.GraphServiceClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class SendWarningEarlyVacatedRoom {
+public class EmailClient {
 //    private final GraphServiceClient graphServiceClient;
+
+    private final static String FROM_EMAIL_ID = "kaloyan.rakov@iodigital.com";
 
     @Value("${MJ_APIKEY_PUBLIC}")
     private String mjAPIKeyPublic;
@@ -71,22 +69,40 @@ public class SendWarningEarlyVacatedRoom {
 ////        message.ccRecipients = ccRecipientsList;
 //    }
 
-    public void sendWarning(String recipientEmail, String recipientName, String senderEmail) {
-        String fromEmailId = "kaloyan.rakov@iodigital.com";
-        if (senderEmail != null) {
-            fromEmailId = senderEmail;
-        }
-
+    private MailjetClient getClient() {
         ClientOptions options = ClientOptions.builder()
                 .apiKey(mjAPIKeyPublic)
                 .apiSecretKey(mjAPIKeyPrivate)
                 .build();
-        MailjetClient client = new MailjetClient(options);
+        return new MailjetClient(options);
+    }
+
+    private SendEmailsResponse sendRequest(MailjetClient client, TransactionalEmail message) {
+        SendEmailsRequest request = SendEmailsRequest
+            .builder()
+            .message(message)
+            .build();
+
+        SendEmailsResponse response = null;
+        try {
+            response = request.sendWith(client);
+        } catch (MailjetException e) {
+            System.out.println(e.getMessage());
+        }
+        return response;
+    }
+
+    public void sendWarningEarlyExit(String recipientEmail, String recipientName, String senderEmail) {
+        if (senderEmail == null) {
+            senderEmail = FROM_EMAIL_ID;
+        }
+
+        MailjetClient client = getClient();
 
         TransactionalEmail message = TransactionalEmail
                 .builder()
                 .to(new SendContact(recipientEmail, recipientName))
-                .from(new SendContact(fromEmailId, "iO Digital Eindhoven"))
+                .from(new SendContact(senderEmail, "iO Digital Eindhoven"))
                 .htmlPart(String.format("""
                     <p>Dear %s,</br></br>
                     
@@ -100,16 +116,60 @@ public class SendWarningEarlyVacatedRoom {
                 .trackOpens(TrackOpens.ENABLED)
                 .build();
 
-        SendEmailsRequest request = SendEmailsRequest
+        SendEmailsResponse response = sendRequest(client, message);
+    }
+
+    public void sendWarningLateEntry(String recipientEmail, String recipientName, String senderEmail) {
+        if (senderEmail == null) {
+            senderEmail = FROM_EMAIL_ID;
+        }
+
+        MailjetClient client = getClient();
+
+        TransactionalEmail message = TransactionalEmail
                 .builder()
-                .message(message)
+                .to(new SendContact(recipientEmail, recipientName))
+                .from(new SendContact(senderEmail, "iO Digital Eindhoven"))
+                .htmlPart(String.format("""
+                    <p>Dear %s,</br></br>
+                    
+                    The system has detected you entered your booked room later than the start time you declared when you booked it.
+                    Please, next time mark the room as available for others if you enter the room late.</br></br>
+                    
+                    Best regards,</br></br>
+                    
+                    iO</p>""", recipientName))
+                .subject("Warning: you entered your reserved room late without confirming it.")
+                .trackOpens(TrackOpens.ENABLED)
                 .build();
 
-        SendEmailsResponse response = null;
-        try {
-            response = request.sendWith(client);
-        } catch (MailjetException e) {
-            System.out.println(e.getMessage());
+        SendEmailsResponse response = sendRequest(client, message);
+    }
+
+    public void sendWarningAbsence(String recipientEmail, String recipientName, String senderEmail) {
+        if (senderEmail == null) {
+            senderEmail = FROM_EMAIL_ID;
         }
+
+        MailjetClient client = getClient();
+
+        TransactionalEmail message = TransactionalEmail
+                .builder()
+                .to(new SendContact(recipientEmail, recipientName))
+                .from(new SendContact(senderEmail, "iO Digital Eindhoven"))
+                .htmlPart(String.format("""
+                    <p>Dear %s,</br></br>
+                    
+                    The system has detected you did not attend your booked room.
+                    Please, next time mark the room as available for others if you are not going to attend the room.</br></br>
+                    
+                    Best regards,</br></br>
+                    
+                    iO</p>""", recipientName))
+                .subject("Warning: you did not confirm you were not going to attend your reserved room.")
+                .trackOpens(TrackOpens.ENABLED)
+                .build();
+
+        SendEmailsResponse response = sendRequest(client, message);
     }
 }
