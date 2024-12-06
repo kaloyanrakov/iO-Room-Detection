@@ -13,4 +13,6 @@ public class GetAllRoomsRequest {
     private String placeId;
     private int pageSize;
     private int pageIndex;
+    private String status;
+    private int floorNumber;
 }

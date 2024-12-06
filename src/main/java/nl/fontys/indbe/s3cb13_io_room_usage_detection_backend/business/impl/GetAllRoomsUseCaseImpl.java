@@ -13,6 +13,7 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.Meeting
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.entity.MeetingRoomEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl.GetRoomEventStatus.getRoomEventStatus;
@@ -41,19 +42,56 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
             request.setPlaceId("rooms.eindhoven@iodigital.com");
         }
 
-        List<Room> rooms = roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex() , request.getPageSize());
+        if (request.getFloorNumber() == -1 && request.getStatus().isEmpty()) {
+            List<Room> rooms =  roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex() , request.getPageSize());
 
-        String replacedEmail = "jupiter.eindhoven@iodigital.com";
-        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
+            String replacedEmail = "jupiter.eindhoven@iodigital.com";
+            String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
 
 
-        List<MeetingRoom> meetingRooms = rooms.stream()
-                .map(room ->  {
+            List<MeetingRoom> meetingRooms = rooms.stream()
+                    .map(room ->  {
 
-                    if (room.getEmailAddress().equals(replacedEmail)) {
-                        room.setEmailAddress(replacementEmail);
+                        if (room.getEmailAddress().equals(replacedEmail)) {
+                            room.setEmailAddress(replacementEmail);
+                        }
+
+                        MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.getMeetingRoomEntityByEmail(room.getEmailAddress());
+                        RoomEvent roomEvent = null;
+                        try {
+                            roomEvent = getCurrentRoomEventUseCase.getCurrentRoomEvent(room.getEmailAddress());
+                        }
+                        catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        RoomEventStatus status = getRoomEventStatus(roomEvent);
+                        return MeetingRoomConverter.convertMeetingRoom(room, meetingRoomEntity,roomEvent, status);
+                    }).toList();
+
+            return GetAllRoomsResponse.builder().rooms(meetingRooms).build();
+        }
+
+        List<Room> rooms = roomApi.getAllRooms(request.getPlaceId(), 0, Integer.MAX_VALUE);
+
+        List<MeetingRoom> filteredRooms = rooms.stream()
+                .filter(room -> request.getFloorNumber() == -1 || extractFloorFromDisplayName(room.getDisplayName()) == request.getFloorNumber())
+                .filter(room -> {
+                    if (request.getStatus().isEmpty())
+                    {
+                        return true;
                     }
+                    RoomEvent roomEvent = null ;
 
+                    try {
+                        roomEvent = getCurrentRoomEventUseCase.getCurrentRoomEvent(room.getEmailAddress());
+                    }
+                    catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    RoomEventStatus status = GetRoomEventStatus.getRoomEventStatus(roomEvent);
+                    return status.name().equalsIgnoreCase(request.getStatus());
+                })
+                .map(room -> {
                     MeetingRoomEntity meetingRoomEntity = meetingRoomRepository.getMeetingRoomEntityByEmail(room.getEmailAddress());
                     RoomEvent roomEvent = null;
                     try {
@@ -62,11 +100,27 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
                     catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
-                    RoomEventStatus status = getRoomEventStatus(roomEvent);
-                    return MeetingRoomConverter.convertMeetingRoom(room, meetingRoomEntity,roomEvent, status);
-        }).toList();
+                    RoomEventStatus status = GetRoomEventStatus.getRoomEventStatus(roomEvent);
+                    return MeetingRoomConverter.convertMeetingRoom(room, meetingRoomEntity, roomEvent, status);
+                })
+                .toList();
 
-        return GetAllRoomsResponse.builder().rooms(meetingRooms).build();
+        int start = request.getPageIndex() * request.getPageSize();
+        int end = Math.min(start + request.getPageSize(), filteredRooms.size());
+        List<MeetingRoom> paginatedRooms = start >= filteredRooms.size() ? new ArrayList<>() : filteredRooms.subList(start, end);
+
+        return GetAllRoomsResponse.builder().rooms(paginatedRooms).build();
     }
 
+    private int extractFloorFromDisplayName(String displayName) {
+        if (displayName == null || displayName.isEmpty()) {
+            return -1;
+        }
+        String[] parts = displayName.split(" - ");
+        try {
+            return Integer.parseInt(parts[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            return -1;
+        }
+    }
 }
