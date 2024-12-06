@@ -1,8 +1,8 @@
 package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraReportRequest;
-import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraReportResponse;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionRequest;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,11 @@ class CamerasControllerTest {
 
     @Test
     void createCameraReport_shouldCreateCameraReportAndReturn201Response_whenRequestIsValid() throws Exception {
-        CreateCameraReportRequest request = CreateCameraReportRequest.builder()
+        CreateCameraConnectionRequest request = CreateCameraConnectionRequest.builder()
                 .macAddress("11:11:11:11:11:11")
                 .nrOfOccupants(0)
                 .build();
-        CreateCameraReportResponse response = CreateCameraReportResponse.builder()
+        CreateCameraConnectionResponse response = CreateCameraConnectionResponse.builder()
                 .cameraId(1L)
                 .build();
 
@@ -40,12 +40,12 @@ class CamerasControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Content-Type", APPLICATION_JSON_VALUE))
-                .andExpect(ResponseBodyMatchers.responseBody().containsObjectAsJson(response, CreateCameraReportResponse.class));
+                .andExpect(ResponseBodyMatchers.responseBody().containsObjectAsJson(response, CreateCameraConnectionResponse.class));
     }
 
     @Test
     void createCameraReport_shouldNotCreateCameraReportAndReturn400Response_whenRequestIsInvalid() throws Exception {
-        CreateCameraReportRequest request = CreateCameraReportRequest.builder()
+        CreateCameraConnectionRequest request = CreateCameraConnectionRequest.builder()
                 .macAddress("000000000000")
                 .nrOfOccupants(-1)
                 .build();
