@@ -17,10 +17,7 @@ function AllRoomsPage() {
 
     const navigate = useNavigate(); 
 
-    const handleLoginClick = () => {
-        navigate('/login'); 
-    };
-
+    
 
     const [rooms, setRooms] = useState([]);
 
@@ -74,10 +71,7 @@ function AllRoomsPage() {
             <form>
                 <button className="btn" type="submit">Clear Filters</button>
             </form>
-            <form>
-            <button className="btn login-btn custom-login-btn" type="button" onClick={handleLoginClick}>
-                Log In</button>
-            </form>
+            <a href="/login" className="btn login-btn custom-login-btn">Log In</a>
         </div>
     );
 

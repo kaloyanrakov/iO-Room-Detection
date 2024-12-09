@@ -133,11 +133,7 @@ function RoomInfoPage() {
                 <PeopleAmount label={`${room.currentCapacity}/10`} />
             </div>
             <div className="sidebar-buttons">
-                <button className="btn btn-update">
-                    <Link to="update">
-                        Update Room
-                    </Link>
-                </button>
+            <Link to="update" className="btn btn-update">Update Room</Link>
             </div>
         </div>
     );

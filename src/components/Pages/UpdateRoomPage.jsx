@@ -78,11 +78,7 @@ function UpdateRoomPage() {
                 })()}
             </h2>
             <div className="sidebar-buttons">
-                <button className="btn btn-update custom-update-btn">
-                    <a href={`/rooms/${room.email}`}>
-                        Cancel
-                    </a>
-                </button>
+                <a href={`/rooms/${room.email}`} className="btn btn-update custom-update-btn">Cancel</a>               
             </div>
         </div>
     );
