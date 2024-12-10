@@ -7,6 +7,7 @@ import userIcon from '../../assets/img/user.png';
 import searchIcon from '../../assets/img/search.png';
 import React, {useEffect, useState} from "react";
 import { Link } from 'react-router-dom';
+import EventApi from "../../api/EventApi.jsx";
 
 function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
@@ -29,9 +30,22 @@ function AllRoomsPage() {
     useEffect(() => {
         const getRooms = async () => {
             try {
+                console.log('Fetching rooms...');
                 const roomsData = await fetchRooms();
-                setRooms(roomsData.reverse());
                 console.log('Fetched rooms data:', roomsData);
+
+                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
+                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
+                        console.log(`Fetching events for room: ${room.email}`);
+                        const events = await EventApi.getEventsByEmail(room.email);
+                        console.log(`Fetched events for room ${room.email}:`, events);
+                        return { ...room, meetings: events };
+                    } else {
+                        return { ...room, meetings: [] };
+                    }
+                }));
+                console.log('Rooms with events:', roomsWithEvents);
+                setRooms(roomsWithEvents.reverse());
             } catch (error) {
                 console.error('Error fetching rooms:', error);
             }
@@ -44,6 +58,16 @@ function AllRoomsPage() {
         console.log('Rooms length:', rooms.length); // Log whenever rooms length changes
         console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
     }, [rooms]);
+
+    const getNextMeetingTime = (meetings) => {
+        const now = new Date();
+        const todayMeetings = meetings.filter(meeting => new Date(meeting.startTime).getDate() === now.getDate());
+        if (todayMeetings.length === 0) {
+            return "Until end of the day";
+        }
+        const nextMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) > now);
+        return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
+    };
 
 
     const sidebarContent = (
@@ -111,7 +135,7 @@ function AllRoomsPage() {
                                         </div>
                                         <div className="room-right">
                                             <p className={`room-status text-${room.status}`}>{room.status}</p>
-                                            <p className="until">Until</p>
+                                            <p className="until">{getNextMeetingTime(room.meetings)}</p>
                                         </div>
                                     </div>
                                 </Link>
