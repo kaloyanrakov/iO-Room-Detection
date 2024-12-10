@@ -59,12 +59,21 @@ function AllRoomsPage() {
         console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
     }, [rooms]);
 
-    const getNextMeetingTime = (meetings) => {
+    const getNextMeetingTime = (meetings, status) => {
         const now = new Date();
         const todayMeetings = meetings.filter(meeting => new Date(meeting.startTime).getDate() === now.getDate());
+
         if (todayMeetings.length === 0) {
             return "Until end of the day";
         }
+
+        if (status === 'OCCUPIED_NOW') {
+            const currentMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) <= now && new Date(meeting.endTime) > now);
+            if (currentMeeting) {
+                return `Until ${new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            }
+        }
+
         const nextMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) > now);
         return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
     };
@@ -135,7 +144,7 @@ function AllRoomsPage() {
                                         </div>
                                         <div className="room-right">
                                             <p className={`room-status text-${room.status}`}>{room.status}</p>
-                                            <p className="until">{getNextMeetingTime(room.meetings)}</p>
+                                            <p className="until">{getNextMeetingTime(room.meetings, room.status)}</p>
                                         </div>
                                     </div>
                                 </Link>
