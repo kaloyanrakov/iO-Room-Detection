@@ -37,13 +37,15 @@ public class RoomsController {
                                                            @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                                            @RequestParam(value = "status", required = false, defaultValue = "" ) String status,
-                                                           @RequestParam(value = "floorNumber", required = false, defaultValue = "-1") int floorNumber) {
+                                                           @RequestParam(value = "floorNumber", required = false, defaultValue = "-1") int floorNumber,
+                                                           @RequestParam(value = "searchInput", required = false, defaultValue = "") String searchInput) {
         GetAllRoomsRequest request = new GetAllRoomsRequest();
         request.setPlaceId(placeId);
         request.setPageIndex(pageIndex);
         request.setPageSize(pageSize);
         request.setStatus(status);
         request.setFloorNumber(floorNumber);
+        request.setSearchInput(searchInput);
         GetAllRoomsResponse response = getAllRoomsUseCase.getAllRooms(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
