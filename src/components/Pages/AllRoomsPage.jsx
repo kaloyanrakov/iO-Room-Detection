@@ -51,6 +51,11 @@ function AllRoomsPage() {
             }
         };
         getRooms();
+        const interval = setInterval(() => {
+            getRooms();
+        }, 30000);
+
+        return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {

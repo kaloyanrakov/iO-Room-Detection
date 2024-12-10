@@ -81,6 +81,8 @@ function RoomInfoPage() {
     // }, [room.currentCapacity])
 
     useEffect(() => {
+        fetchRoom();
+        fetchEvents();
         const interval = setInterval(() => {
             fetchRoom();
             fetchEvents();
