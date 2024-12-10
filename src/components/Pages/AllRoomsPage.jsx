@@ -153,7 +153,7 @@ function AllRoomsPage() {
                                             <PeopleAmount label={`${room.currentCapacity}/10`} />
                                         </div>
                                         <div className="room-right">
-                                            <p className={`room-status text-${room.status}`}>{room.status}</p>
+                                            <p className={`room-status text-${room.status}`}>{statusElem(room.status)}</p>
                                             <p className="until">{getNextMeetingTime(room.meetings, room.status)}</p>
                                         </div>
                                     </div>
