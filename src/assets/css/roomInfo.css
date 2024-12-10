@@ -20,3 +20,22 @@
     flex-direction: column;
     gap: 1em;
 }
+
+.text-occupied{
+    color: red;
+    text-shadow: 0 0 1px #EDF9FF ;
+}
+
+.text-available{
+    color: lawngreen;
+    text-shadow: 0 0 1px #294250 ;
+}
+
+.text-meeting_soon{
+    color: #FFDD00;
+    text-shadow: 0 0 1px #294250 ;
+}
+
+.status {
+    font-size: 1.3rem;
+}
