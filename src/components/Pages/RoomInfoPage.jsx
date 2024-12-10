@@ -94,7 +94,7 @@ function RoomInfoPage() {
         : (room.status === 'AVAILABLE'
             ? <span className="text-available">Available</span>
             : (room.status === 'OCCUPIED_SOON'
-                ? <span className="text-meeting_soon">Meeting soon</span>
+                ? <span className="text-meeting_soon">Meeting Soon</span>
                 : <span>Unknown</span>));
 
     const sidebarContent = (

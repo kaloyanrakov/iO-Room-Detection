@@ -89,8 +89,8 @@ function AllRoomsPage() {
                 <label>Status:</label>
                 <select name="status" id="status">
                     <option value="available">Available</option>
-                    <option value="o-soon">Occupied Soon</option>
-                    <option value="o-now">Occupied Now</option>
+                    <option value="o-soon">Meeting Soon</option>
+                    <option value="o-now">Occupied</option>
                 </select>
             </div>
 
@@ -112,6 +112,16 @@ function AllRoomsPage() {
             <a href="/login" className="btn login-btn custom-login-btn">Log In</a>
         </div>
     );
+
+    const statusElem = (status) => {
+        return status === 'OCCUPIED_NOW'
+            ? <span className="text-occupied">Occupied</span>
+            : (status === 'AVAILABLE'
+                ? <span className="text-available">Available</span>
+                : (status === 'OCCUPIED_SOON'
+                    ? <span className="text-meeting_soon">Meeting Soon</span>
+                    : <span>Unknown</span>));
+    }
 
     const mainContent = (
         <div className="main-content">
