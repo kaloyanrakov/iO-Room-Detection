@@ -25,25 +25,10 @@ function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
 }
 
-// const sidebarContent = (
-//     <div className="sidebar">
-//         <div className="img-div">
-//             <img src={logo} className="logo" alt="IO_Logo" />
-//         </div>
-//         <h2>Room Name</h2>
-//         <div className="filter">
-//             <h1 className="status">Status: <span className="text-occupied">Occupied</span></h1>
-//         </div>
-//         <br />
-//         <div className="room-right-image">
-//             <PeopleAmount label="8/10" />
-//         </div>
-//     </div>
-// );
-
 function Appointment({ appointment, nthPerson }) {
-    return <div aria-label="Appointment" className='appointment-card'>
-        <span aria-label="Time span">
+    return (
+    <div aria-label="Appointment" className='appointment-card'>
+        <span aria-label="Time span" className="meeting-time">
             {formatDate(new Date(appointment.startTime))} - {formatDate(new Date(appointment.endTime))}
         </span>
         <div className="appointment-person">
@@ -51,14 +36,15 @@ function Appointment({ appointment, nthPerson }) {
             <PeopleAmount label="-" />
         </div>
     </div>
+    )
 }
 
 function PeopleAmount({ label }) {
     return (
-        <span className="people-amount">
-            <img className="people_img" src={userIcon} alt="person icon" />
+        <div className="people-amount">
+            <img className="people_img" src={userIcon} alt="person icon"/>
             <span>{label}</span>
-        </span>
+        </div>
     );
 }
 
@@ -141,7 +127,7 @@ function RoomInfoPage() {
     const mainContent = (
         <div className="main-content">
             <div className="search-bar">
-                <input type="text" placeholder="Search Rooms" />
+                <input type="text" placeholder="Search Meetings" />
                 <button className="btn" type="submit"><img src={serachIcon} alt="search icon" /></button>
             </div>
 

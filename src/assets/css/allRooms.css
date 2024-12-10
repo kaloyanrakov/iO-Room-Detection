@@ -144,8 +144,12 @@ a {
     border-left: 10px solid lawngreen;
 }
 
-.border-OCCUPIED {
+.border-OCCUPIED_NOW {
     border-left: 10px solid red;
+}
+
+.border-OCCUPIED_SOON {
+    border-left: 10px solid #FFDD00;
 }
 
 .text-AVAILABLE {
@@ -153,9 +157,14 @@ a {
     color: lawngreen;
 }
 
-.text-OCCUPIED {
+.text-OCCUPIED_NOW {
     border: none;
     color: red;
+}
+
+.text-OCCUPIED_SOON {
+    border: none;
+    color: #FFDD00;
 }
 
 .status{
@@ -186,17 +195,6 @@ a {
     /* flex-direction: row; */
     /* size: 3%; */
 }
-
-.text-occupied {
-    color: red;
-}
-.text-available {
-    color: lawngreen;
-}
-.text-meeting_soon {
-    color: #FFDD00;
-}
-
 
 .custom-login-btn {
     margin-top: 220px;

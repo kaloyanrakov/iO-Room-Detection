@@ -5,20 +5,25 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
 import searchIcon from '../../assets/img/search.png';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from 'react-router-dom';
 
 function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
 }
 
+function PeopleAmount({ label }) {
+    return (
+        <span className="people-amount">
+            <img className="people_img" src={userIcon} alt="person icon" />
+            <span>{label}</span>
+        </span>
+    );
+}
+
 function AllRoomsPage() {
 
-
-    const navigate = useNavigate(); 
-
-    
-
+    const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
 
     useEffect(() => {
@@ -102,8 +107,7 @@ function AllRoomsPage() {
                                     <div className={`indiv-room border-${room.status}`}>
                                         <div className="room-left">
                                             <h2>{formattedRoomName}</h2>
-                                            <img src={userIcon} alt="person icon"/>
-                                            <p className="people-amount">0/{room.maxCapacity}</p>
+                                            <PeopleAmount label={`${room.currentCapacity}/10`} />
                                         </div>
                                         <div className="room-right">
                                             <p className={`room-status text-${room.status}`}>{room.status}</p>
