@@ -45,7 +45,7 @@ function AllRoomsPage() {
                     }
                 }));
                 console.log('Rooms with events:', roomsWithEvents);
-                setRooms(roomsWithEvents.reverse());
+                setRooms(roomsWithEvents);
             } catch (error) {
                 console.error('Error fetching rooms:', error);
             }
