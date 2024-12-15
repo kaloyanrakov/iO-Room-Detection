@@ -26,12 +26,18 @@ function AllRoomsPage() {
 
     const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
+    const [searchInput, setSearchInput] = useState();
 
-    useEffect(() => {
+    const onChangeSearchInput = e => {
+        setSearchInput(e.target.value);
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
         const getRooms = async () => {
             try {
                 console.log('Fetching rooms...');
-                const roomsData = await fetchRooms();
+                const roomsData = await fetchRooms(searchInput);
                 console.log('Fetched rooms data:', roomsData);
 
                 const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
@@ -51,12 +57,40 @@ function AllRoomsPage() {
             }
         };
         getRooms();
-        const interval = setInterval(() => {
-            getRooms();
-        }, 30000);
+    }
 
-        return () => clearInterval(interval);
-    }, []);
+    useEffect(() => {
+        if (!searchInput?.trim()) {
+            const getRooms = async () => {
+                try {
+                    console.log('Fetching rooms...');
+                    const roomsData = await fetchRooms();
+                    console.log('Fetched rooms data:', roomsData);
+
+                    const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
+                        if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
+                            console.log(`Fetching events for room: ${room.email}`);
+                            const events = await EventApi.getEventsByEmail(room.email);
+                            console.log(`Fetched events for room ${room.email}:`, events);
+                            return { ...room, meetings: events };
+                        } else {
+                            return { ...room, meetings: [] };
+                        }
+                    }));
+                    console.log('Rooms with events:', roomsWithEvents);
+                    setRooms(roomsWithEvents);
+                } catch (error) {
+                    console.error('Error fetching rooms:', error);
+                }
+            };
+            getRooms();
+            const interval = setInterval(() => {
+                getRooms();
+            }, 30000);
+
+            return () => clearInterval(interval);
+        }
+    }, [searchInput]);
 
     useEffect(() => {
         console.log('Updated rooms:', rooms); // Log whenever rooms changes
@@ -130,10 +164,12 @@ function AllRoomsPage() {
 
     const mainContent = (
         <div className="main-content">
-            <div className="search-bar">
-                <input type="text" placeholder="Search Rooms"/>
-                <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
-            </div>
+            <form onSubmit={handleSearch}>
+                <div className="search-bar">
+                        <input type="text" placeholder="Search Rooms" required onChange={onChangeSearchInput}/>
+                        <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
+                </div>
+            </form>
 
             <div className="rooms-list">
                 {rooms.length > 0 ? (

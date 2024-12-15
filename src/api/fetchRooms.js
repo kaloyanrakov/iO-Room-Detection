@@ -1,8 +1,18 @@
 import axios from 'axios';
 
-const fetchRooms = async () => {
+const fetchRooms = async (searchInput) => {
     try {
-        const response = await axios.get('http://localhost:8080/rooms');
+        let response;
+        if (searchInput?.trim()) {
+            response = await axios.get('http://localhost:8080/rooms', {
+                params: {
+                  searchInput: searchInput.toString()
+                }
+        });
+        } else {
+            response = await axios.get('http://localhost:8080/rooms');
+        }
+
         console.log('Fetched rooms:', response.data);
         return response.data.rooms;
     } catch (error) {
