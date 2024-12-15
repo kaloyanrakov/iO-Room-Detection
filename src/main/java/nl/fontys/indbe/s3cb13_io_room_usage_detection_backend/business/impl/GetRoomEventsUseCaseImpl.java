@@ -68,10 +68,4 @@ public class GetRoomEventsUseCaseImpl implements GetRoomEventsUseCase {
 
         return roomEventsList;
     }
-
-    private String getEmail(String email) {
-        String replacedEmail = "jupiter.eindhoven@iodigital.com";
-        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
-        return replacedEmail.equals(email) ? replacementEmail : email;
-    }
 }
