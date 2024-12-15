@@ -25,7 +25,7 @@ function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
 }
 
-function Appointment({ appointment, nthPerson }) {
+function Appointment({ appointment }) {
     return (
     <div aria-label="Appointment" className='appointment-card'>
         <span aria-label="Time span" className="meeting-time">
@@ -33,7 +33,7 @@ function Appointment({ appointment, nthPerson }) {
         </span>
         <div className="appointment-person">
             <span>{appointment.organizerName}</span>
-            <PeopleAmount label="-" />
+            <PeopleAmount label={appointment.maxOccupancy} />
         </div>
     </div>
     )
@@ -135,7 +135,7 @@ function RoomInfoPage() {
 
             <div className="appointments-list">
                 {events.map((event, idx) => (
-                    <Appointment appointment={event} nthPerson={idx + 1} key={idx + 1} />
+                    <Appointment appointment={event} key={idx + 1} />
                 ))}
             </div>
         </div>
