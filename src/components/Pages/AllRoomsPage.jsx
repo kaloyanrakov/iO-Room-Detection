@@ -23,7 +23,7 @@ function PeopleAmount({ label }) {
 }
 
 function AllRoomsPage() {
-    const navigate = useNavigate();
+    const navigate = useNavigate();//
     const [rooms, setRooms] = useState([]);
     const [statusFilter, setStatusFilter] = useState("");
     const [floorFilter, setFloorFilter] = useState("");
