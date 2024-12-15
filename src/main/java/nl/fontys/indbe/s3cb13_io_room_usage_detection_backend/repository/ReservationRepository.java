@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
-    @Query("select r.maxOccupancy from ReservationEntity r where r.meetingRoom.id = :meetingRoomId")
-    Integer getReservationMaxOccupancyByMeetingRoomId(long meetingRoomId);
+public interface ReservationRepository extends JpaRepository<ReservationEntity, String> {
+    @Query("select r.maxOccupancy from ReservationEntity r where r.id = :id")
+    Integer getReservationMaxOccupancyById(@Param("id") String id);
 
     @Modifying
-    @Query("update ReservationEntity r set r.maxOccupancy = :maxOccupancy where r.meetingRoom.id = :meetingRoomId")
-    void updateReservationMaxOccupancy(@Param("meetingRoomId") long meetingRoomId, @Param("maxOccupancy") int maxOccupancy);
+    @Query("update ReservationEntity r set r.maxOccupancy = :maxOccupancy where r.id = :id")
+    void updateReservationMaxOccupancyById(@Param("id") String id, @Param("maxOccupancy") int maxOccupancy);
 }

@@ -1,7 +1,7 @@
 CREATE TABLE `Reservation` (
-   `id` BIGINT NOT NULL AUTO_INCREMENT,
+   `id` VARCHAR(152) NOT NULL,
    `room_id` BIGINT NOT NULL,
-   `max_occupancy` INT NOT NULL DEFAULT 0,
+   `max_occupancy` INT NOT NULL,
    PRIMARY KEY (`id`),
    FOREIGN KEY (`room_id`) REFERENCES `Meeting_Room` (`id`)
 );

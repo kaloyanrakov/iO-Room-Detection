@@ -49,16 +49,18 @@ public class UpdateCameraConnectionUseCaseImpl implements UpdateCameraConnection
 
             GetMeetingRoomResponse getMeetingRoomResponse = getMeetingRoomUseCase.getMeetingRoom(meetingRoomEntity.getEmail());
             if (getMeetingRoomResponse.getMeetingRoom().getStatus() == RoomEventStatus.OCCUPIED_NOW) {
-                Integer maxOccupancy = reservationRepository.getReservationMaxOccupancyByMeetingRoomId(meetingRoomEntity.getId());
+                String roomEventId = getMeetingRoomResponse.getMeetingRoom().getRoomEvent().getId();
+                Integer maxOccupancy = reservationRepository.getReservationMaxOccupancyById(roomEventId);
                 if (maxOccupancy == null) {
                     ReservationEntity reservationEntity = ReservationEntity.builder()
+                            .id(roomEventId)
                             .meetingRoom(meetingRoomEntity)
                             .maxOccupancy(request.getNrOfOccupants())
                             .build();
                     reservationRepository.save(reservationEntity);
                 }
                 else if (request.getNrOfOccupants() > maxOccupancy) {
-                    reservationRepository.updateReservationMaxOccupancy(meetingRoomEntity.getId(), request.getNrOfOccupants());
+                    reservationRepository.updateReservationMaxOccupancyById(roomEventId, request.getNrOfOccupants());
                 }
             }
 

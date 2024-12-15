@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "Reservation")
@@ -16,9 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReservationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Length(max = 152)
     @Column(name = "id")
-    private long id;
+    private String id;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "room_id")
