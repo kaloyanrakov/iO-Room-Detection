@@ -45,6 +45,29 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
         if (request.getFloorNumber() == -1 && request.getStatus().isEmpty()) {
             List<Room> rooms =  roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex(), request.getPageSize(), request.getSearchInput());
 
+            if (!request.getSearchInput().isBlank()) {
+                if (rooms != null && rooms.size() > 0) {
+                    List<Room> filteredRooms = new ArrayList<>();
+                    for (Room room : rooms) {
+                        if (extractNameFromDisplayName(room.getDisplayName()) != null && extractNameFromDisplayName(room.getDisplayName()).toLowerCase().contains(request.getSearchInput().toLowerCase())) {
+                            filteredRooms.add(room);
+                        }
+                    }
+                    if (filteredRooms.size() > 0) {
+                        int startIndex = request.getPageSize() * request.getPageIndex();
+                        int endIndex = startIndex + request.getPageSize();
+                        List<Room> paginatedRooms = new ArrayList<>();
+                        for (int i = startIndex; i < endIndex; i++) {
+                            if (i < filteredRooms.size()) {
+                                paginatedRooms.add(filteredRooms.get(i));
+                            }
+                        }
+                        rooms = paginatedRooms;
+                    } else {
+                        rooms = filteredRooms;
+                    }
+                }
+            }
 
             List<MeetingRoom> meetingRooms = rooms.stream()
                     .map(room ->  {
@@ -116,5 +139,13 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             return -1;
         }
+    }
+
+    private String extractNameFromDisplayName(String displayName) {
+        if (displayName.isBlank()) {
+            return null;
+        }
+        String[] parts = displayName.split(" - ");
+        return parts[2];
     }
 }
