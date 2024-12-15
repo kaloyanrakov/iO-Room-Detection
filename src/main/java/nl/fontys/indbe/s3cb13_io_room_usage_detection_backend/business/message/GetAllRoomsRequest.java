@@ -15,4 +15,5 @@ public class GetAllRoomsRequest {
     private int pageIndex;
     private String status;
     private int floorNumber;
+    private String searchInput;
 }

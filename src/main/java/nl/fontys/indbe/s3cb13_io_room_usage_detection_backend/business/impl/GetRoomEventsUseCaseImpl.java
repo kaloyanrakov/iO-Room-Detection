@@ -45,13 +45,7 @@ public class GetRoomEventsUseCaseImpl implements GetRoomEventsUseCase {
     }
 
     private List<Event> getRoomEventsApi(String email, LocalDateTime startTime, LocalDateTime endTime) {
-        String resolvedEmail = getEmail(email);
-        return eventApi.getRoomEvents(resolvedEmail, startTime, endTime);
+        return eventApi.getRoomEvents(email, startTime, endTime);
     }
 
-    private String getEmail(String email) {
-        String replacedEmail = "jupiter.eindhoven@iodigital.com";
-        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
-        return replacedEmail.equals(email) ? replacementEmail : email;
-    }
 }
