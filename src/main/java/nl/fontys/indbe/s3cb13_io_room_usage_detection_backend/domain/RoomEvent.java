@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomEvent {
+    private String id;
     private String roomEmail;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String organizerName;
+    private int maxOccupancy;
 }

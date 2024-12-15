@@ -15,6 +15,7 @@ final class RoomEventConverter {
         LocalDateTime endDateTime = DateTimeConverter.convertUtcToLocal(event.getEnd().getDateTime() + TIMEZONE_SUFFIX_UTC, TIMEZONE_SUFFIX_UTC);
 
         return RoomEvent.builder()
+                .id(event.getId())
                 .roomEmail(event.getLocation().getLocationUri())
                 .startTime(startDateTime)
                 .endTime(endDateTime)
