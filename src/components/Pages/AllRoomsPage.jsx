@@ -8,6 +8,7 @@ import searchIcon from '../../assets/img/search.png';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import EventApi from "../../api/EventApi.jsx";
+import fetchAllRooms from "../../api/fetchRooms.js";
 
 function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-") + 2), "");
@@ -23,113 +24,54 @@ function PeopleAmount({ label }) {
 }
 
 function AllRoomsPage() {
-
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize] = useState(10);
     const [rooms, setRooms] = useState([]);
-    const [statusFilter, setStatusFilter] = useState("");
-    const [floorFilter, setFloorFilter] = useState("");
-    const [searchInput, setSearchInput] = useState();
+    const [allRooms, setAllRooms] = useState([]); 
+    
 
-    const onChangeSearchInput = e => {
-        setSearchInput(e.target.value);
-    }
-
-    const handleSearch = e => {
-        e.preventDefault();
-        const getRooms = async () => {
+    useEffect(() => {
+        const loadRooms = async () => {
             try {
-                console.log('Fetching rooms...');
-                const roomsData = await fetchRooms(searchInput);
-                console.log('Fetched rooms data:', roomsData);
-
-                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                        console.log(`Fetching events for room: ${room.email}`);
-                        const events = await EventApi.getEventsByEmail(room.email);
-                        console.log(`Fetched events for room ${room.email}:`, events);
-                        return { ...room, meetings: events };
-                    } else {
-                        return { ...room, meetings: [] };
-                    }
-                }));
-                console.log('Rooms with events:', roomsWithEvents);
-                setRooms(roomsWithEvents);
+                const roomsData = await fetchRooms(pageIndex, pageSize);  // Fetch rooms based on pageIndex and pageSize
+                setRooms(roomsData.rooms);  // Store paginated rooms
             } catch (error) {
-                console.error('Error fetching rooms:', error);
+                console.error("Error loading rooms:", error);
             }
         };
-        getRooms();
-    }
+        loadRooms();
+    }, [pageIndex, pageSize]);
 
     useEffect(() => {
-        if (!searchInput?.trim()) {
-            const getRooms = async () => {
-                try {
-                    console.log('Fetching rooms...');
-                    const roomsData = await fetchRooms();
-                    console.log('Fetched rooms data:', roomsData);
-
-                    const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                        if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                            console.log(`Fetching events for room: ${room.email}`);
-                            const events = await EventApi.getEventsByEmail(room.email);
-                            console.log(`Fetched events for room ${room.email}:`, events);
-                            return { ...room, meetings: events };
-                        } else {
-                            return { ...room, meetings: [] };
-                        }
-                    }));
-                    console.log('Rooms with events:', roomsWithEvents);
-                    setRooms(roomsWithEvents);
-                } catch (error) {
-                    console.error('Error fetching rooms:', error);
-                }
-            };
-            getRooms();
-            const interval = setInterval(() => {
-                getRooms();
-            }, 30000);
-
-            return () => clearInterval(interval);
-        }
-    }, [searchInput]);
-
-    useEffect(() => {
-        console.log('Updated rooms:', rooms); // Log whenever rooms changes
-        console.log('Rooms length:', rooms.length); // Log whenever rooms length changes
-        console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
-    }, [rooms]);
-
-    const getNextMeetingTime = (meetings, status) => {
-        const now = new Date();
-        const todayMeetings = meetings.filter(meeting => new Date(meeting.startTime).getDate() === now.getDate());
-
-        if (todayMeetings.length === 0) {
-            return "Until end of the day";
-        }
-
-        if (status === 'OCCUPIED_NOW') {
-            const currentMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) <= now && new Date(meeting.endTime) > now);
-            if (currentMeeting) {
-                return `Until ${new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        const loadAllRooms = async () => {
+            try {
+                const allRoomsData = await fetchAllRooms();  // Fetch all rooms
+                setAllRooms(allRoomsData.rooms);  // Store all rooms in state
+            } catch (error) {
+                console.error("Error loading all rooms:", error);
             }
-        }
+        };
+        loadAllRooms();
+    }, []); 
 
-        const nextMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) > now);
-        return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
+    const handleNextPage = () => {
+
+        console.log('Current page index:', pageIndex);
+        console.log('Total rooms to show for current page:', (pageIndex + 1) * pageSize);
+        console.log('Total Rooms:', allRooms);
+        console.log('Rooms:', rooms);
+
+        if ((pageIndex + 1) * pageSize < allRooms.length) {
+            setPageIndex(pageIndex + 1);
+        }
     };
 
-    const filteredRooms = rooms.filter((room) => {
-        const matchesStatus = !statusFilter || room.status === statusFilter.toUpperCase();
-        const floorMatch = room.name.match(/ - (\d+)/);
-        const roomFloor = floorMatch ? floorMatch[1] : null;
-        const matchesFloor = !floorFilter || roomFloor === floorFilter;
-
-        return matchesStatus && matchesFloor;
-    });
-
-    const handleStatusChange = (e) => setStatusFilter(e.target.value);
-    const handleFloorChange = (e) => setFloorFilter(e.target.value);
+    const handlePreviousPage = () => {
+        if (pageIndex > 0) {
+            setPageIndex(pageIndex - 1);
+        }
+    };
 
     const sidebarContent = (
         <div className="sidebar">
@@ -211,6 +153,10 @@ function AllRoomsPage() {
                 ) : (
                     <p>No rooms available</p>
                 )}
+            </div>
+            <div className="pagination">
+                <button onClick={handlePreviousPage} disabled={pageIndex === 0} className="btn custom-pagin-btn">Previous</button>
+                <button onClick={handleNextPage} disabled={(pageIndex + 1) * pageSize >= rooms} className="btn custom-pagin-btn">Next</button>
             </div>
         </div>
     );
