@@ -52,13 +52,7 @@ public class GetMeetingRoomUseCaseImpl implements GetMeetingRoomUseCase {
     }
 
     private GetMeetingRoomResponse buildMeetingRoomResponse(String email) {
-        String replacedEmail = "jupiter.eindhoven@iodigital.com";
-        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
-
         Room room = getRoomByEmail(email);
-        if (email.equals(replacedEmail) || email.equals(replacementEmail)) {
-            room.setEmailAddress(email);
-        }
         RoomEvent roomEvent = getCurrentRoomEvent(room.getEmailAddress());
         RoomEventStatus status = getRoomEventStatus(roomEvent);
 
@@ -68,11 +62,7 @@ public class GetMeetingRoomUseCaseImpl implements GetMeetingRoomUseCase {
     }
 
     private Room getRoomByEmail(String email) {
-        String replacedEmail = "jupiter.eindhoven@iodigital.com";
-        String replacementEmail = "Testruimte1.eindhoven@iodigital.com";
-
-        String resolvedEmail = replacementEmail.equals(email)? replacedEmail : email;
-        return roomApi.getRoom(resolvedEmail);
+        return roomApi.getRoom(email);
     }
 
     private RoomEvent getCurrentRoomEvent(String email) {

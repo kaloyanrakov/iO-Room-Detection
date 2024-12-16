@@ -15,18 +15,20 @@ public class RoomApi {
         graphServiceClient = getGraphClient.getGraphServiceClient();
     }
 
-    public List<Room> getAllRooms(String placeId, int pageIndex, int pageSize) {
+    public List<Room> getAllRooms(String placeId, int pageIndex, int pageSize, String searchInput) {
+        // default Eindhoven for now
         if (placeId == null) {
             placeId = "rooms.eindhoven@iodigital.com";
         }
 
-        RoomCollectionResponse result = graphServiceClient.places().
-                byPlaceId(placeId)
-                .graphRoomList()
-                .rooms()
+        RoomCollectionResponse result = graphServiceClient.places()
+                .graphRoom()
                 .get(RequestConfiguration -> {
-                    RequestConfiguration.queryParameters.skip = pageIndex * pageSize;
-                    RequestConfiguration.queryParameters.top = pageSize;
+                    RequestConfiguration.queryParameters.filter = "endsWith(emailAddress, 'eindhoven@iodigital.com')";
+                    if (searchInput.isBlank()) {
+                        RequestConfiguration.queryParameters.skip = pageIndex * pageSize;
+                        RequestConfiguration.queryParameters.top = pageSize;
+                    }
                 });
 
         return result.getValue();
@@ -38,10 +40,8 @@ public class RoomApi {
 
         String filter =  String.format("emailAddress eq '%s'", roomEmail);
 
-        RoomCollectionResponse result = graphServiceClient.places().
-                byPlaceId(placeId)
-                .graphRoomList()
-                .rooms()
+        RoomCollectionResponse result = graphServiceClient.places()
+                .graphRoom()
                 .get(RequestConfiguration -> {
                     RequestConfiguration.queryParameters.filter = filter;
                     RequestConfiguration.queryParameters.top = 1;

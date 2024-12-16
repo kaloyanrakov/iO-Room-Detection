@@ -23,8 +23,8 @@ final class GetRoomEventStatus {
         if ((startTime.isBefore(now) || startTime.equals(now)) && endTime.isAfter(now)) {
             return RoomEventStatus.OCCUPIED_NOW;
         }
-        LocalDateTime offset = startTime.minusMinutes(OFFSET_FOR_OCCUPIED_SOON);
-        if (startTime.isAfter(now) && (offset.isAfter(now) || offset.equals(now))) {
+        LocalDateTime offset = now.plusMinutes(OFFSET_FOR_OCCUPIED_SOON);
+        if (startTime.isAfter(now) && (offset.isAfter(startTime) || offset.equals(startTime))) {
             return RoomEventStatus.OCCUPIED_SOON;
         }
         return RoomEventStatus.AVAILABLE;
