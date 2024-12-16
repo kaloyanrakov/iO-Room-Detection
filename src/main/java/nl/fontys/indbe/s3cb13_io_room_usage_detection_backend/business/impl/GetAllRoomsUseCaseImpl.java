@@ -45,7 +45,7 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
         if (request.getFloorNumber() == -1 && request.getStatus().isEmpty()) {
             List<Room> rooms =  roomApi.getAllRooms(request.getPlaceId(), request.getPageIndex(), request.getPageSize(), request.getSearchInput());
 
-            if (!request.getSearchInput().isBlank()) {
+            if (request.getSearchInput() != null && !request.getSearchInput().isBlank()) {
                 if (rooms != null && rooms.size() > 0) {
                     List<Room> filteredRooms = new ArrayList<>();
                     for (Room room : rooms) {
@@ -142,7 +142,7 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
     }
 
     private String extractNameFromDisplayName(String displayName) {
-        if (displayName.isBlank()) {
+        if (displayName == null || displayName.isBlank()) {
             return null;
         }
         String[] parts = displayName.split(" - ");
