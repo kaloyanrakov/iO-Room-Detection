@@ -8,6 +8,7 @@ import searchIcon from '../../assets/img/search.png';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import EventApi from "../../api/EventApi.jsx";
+import fetchAllRooms from "../../api/fetchRooms.js";
 
 function formatName(name) {
     return name.replace(name.substring(0, name.lastIndexOf("-") + 2), "");
@@ -29,9 +30,20 @@ function AllRoomsPage() {
     const [statusFilter, setStatusFilter] = useState("");
     const [floorFilter, setFloorFilter] = useState("");
     const [searchInput, setSearchInput] = useState();
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize] = useState(10);
+    const [allRooms, setAllRooms] = useState([]); 
 
     const onChangeSearchInput = e => {
         setSearchInput(e.target.value);
+    }
+
+    const handleStatusChange = (e) => {
+        setStatusFilter(e.target.value);
+    }
+    
+    const handleFloorChange = (e) => {
+        setFloorFilter(e.target.value);
     }
 
     const handleSearch = e => {
@@ -39,7 +51,7 @@ function AllRoomsPage() {
         const getRooms = async () => {
             try {
                 console.log('Fetching rooms...');
-                const roomsData = await fetchRooms(searchInput);
+                const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, null, null);
                 console.log('Fetched rooms data:', roomsData);
 
                 const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
@@ -62,43 +74,89 @@ function AllRoomsPage() {
     }
 
     useEffect(() => {
-        if (!searchInput?.trim()) {
-            const getRooms = async () => {
-                try {
-                    console.log('Fetching rooms...');
-                    const roomsData = await fetchRooms();
-                    console.log('Fetched rooms data:', roomsData);
+        const getRooms = async () => {
+            try {
+                console.log('Fetching rooms...');
+                const roomsData = await fetchRooms(pageIndex, pageSize, null, floorFilter, statusFilter);
+                console.log('Fetched rooms data:', roomsData);
 
-                    const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                        if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                            console.log(`Fetching events for room: ${room.email}`);
-                            const events = await EventApi.getEventsByEmail(room.email);
-                            console.log(`Fetched events for room ${room.email}:`, events);
-                            return { ...room, meetings: events };
-                        } else {
-                            return { ...room, meetings: [] };
-                        }
-                    }));
-                    console.log('Rooms with events:', roomsWithEvents);
-                    setRooms(roomsWithEvents);
+                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
+                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
+                        console.log(`Fetching events for room: ${room.email}`);
+                        const events = await EventApi.getEventsByEmail(room.email);
+                        console.log(`Fetched events for room ${room.email}:`, events);
+                        return { ...room, meetings: events };
+                    } else {
+                        return { ...room, meetings: [] };
+                    }
+                }));
+                console.log('Rooms with events:', roomsWithEvents);
+                setRooms(roomsWithEvents);
+            } catch (error) {
+                console.error('Error fetching rooms:', error);
+            }
+        };
+        getRooms();
+    }, [floorFilter, statusFilter])
+
+    useEffect(() => {
+        const loadRooms = async () => {
+            try {
+                const roomsData = await fetchRooms(pageIndex, pageSize, null, null, null);  // Fetch rooms based on pageIndex and pageSize
+                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
+                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
+                        console.log(`Fetching events for room: ${room.email}`);
+                        const events = await EventApi.getEventsByEmail(room.email);
+                        console.log(`Fetched events for room ${room.email}:`, events);
+                        return { ...room, meetings: events };
+                    } else {
+                        return { ...room, meetings: [] };
+                    }
+                }));
+                setRooms(roomsWithEvents);  // Store paginated rooms
+            } catch (error) {
+                console.error("Error loading rooms:", error);
+            }
+        };
+        loadRooms();
+    }, [pageIndex, pageSize]);
+
+    useEffect(() => {
+        if (!searchInput?.trim()) {
+            const loadAllRooms = async () => {
+                try {
+                    const allRoomsData = await fetchAllRooms();  // Fetch all rooms
+                    setAllRooms(allRoomsData);  // Store all rooms in state
                 } catch (error) {
-                    console.error('Error fetching rooms:', error);
+                    console.error("Error loading all rooms:", error);
                 }
             };
-            getRooms();
+            loadAllRooms();
             const interval = setInterval(() => {
-                getRooms();
+                loadAllRooms();
             }, 30000);
 
             return () => clearInterval(interval);
         }
-    }, [searchInput]);
+    }, [searchInput]); 
 
-    useEffect(() => {
-        console.log('Updated rooms:', rooms); // Log whenever rooms changes
-        console.log('Rooms length:', rooms.length); // Log whenever rooms length changes
-        console.log('Is rooms an array:', Array.isArray(rooms)); // Log whenever rooms is an array
-    }, [rooms]);
+    const handleNextPage = () => {
+
+        console.log('Current page index:', pageIndex);
+        console.log('Total rooms to show for current page:', (pageIndex + 1) * pageSize);
+        console.log('Total Rooms:', allRooms);
+        console.log('Rooms:', rooms);
+
+        if ((pageIndex + 1) * pageSize < allRooms.length) {
+            setPageIndex(pageIndex + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (pageIndex > 0) {
+            setPageIndex(pageIndex - 1);
+        }
+    };
 
     const getNextMeetingTime = (meetings, status) => {
         const now = new Date();
@@ -118,9 +176,6 @@ function AllRoomsPage() {
         const nextMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) > now);
         return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
     };
-
-    const handleStatusChange = (e) => setStatusFilter(e.target.value);
-    const handleFloorChange = (e) => setFloorFilter(e.target.value);
 
     const sidebarContent = (
         <div className="sidebar">
@@ -172,8 +227,8 @@ function AllRoomsPage() {
         <div className="main-content">
             <form onSubmit={handleSearch}>
                 <div className="search-bar">
-                        <input type="text" placeholder="Search Rooms" required onChange={onChangeSearchInput}/>
-                        <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
+                    <input type="text" placeholder="Search Rooms" required onChange={onChangeSearchInput}/>
+                    <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
                 </div>
             </form>
 
@@ -210,6 +265,10 @@ function AllRoomsPage() {
                 ) : (
                     <p>No rooms available</p>
                 )}
+            </div>
+            <div className="pagination">
+                <button onClick={handlePreviousPage} disabled={pageIndex === 0} className="btn custom-pagin-btn">Previous</button>
+                <button onClick={handleNextPage} disabled={(pageIndex + 1) * pageSize >= rooms} className="btn custom-pagin-btn">Next</button>
             </div>
         </div>
     );
