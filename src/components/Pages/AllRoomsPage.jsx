@@ -119,15 +119,6 @@ function AllRoomsPage() {
         return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
     };
 
-    const filteredRooms = rooms.filter((room) => {
-        const matchesStatus = !statusFilter || room.status === statusFilter.toUpperCase();
-        const floorMatch = room.name.match(/ - (\d+)/);
-        const roomFloor = floorMatch ? floorMatch[1] : null;
-        const matchesFloor = !floorFilter || roomFloor === floorFilter;
-
-        return matchesStatus && matchesFloor;
-    });
-
     const handleStatusChange = (e) => setStatusFilter(e.target.value);
     const handleFloorChange = (e) => setFloorFilter(e.target.value);
 
@@ -187,8 +178,16 @@ function AllRoomsPage() {
             </form>
 
             <div className="rooms-list">
-                {filteredRooms.length > 0 ? (
-                    filteredRooms.map(room => {
+            {rooms.length > 0 ? (
+                    // Sort rooms by floor before mapping
+                    [...rooms]
+                        .sort((a, b) => {
+                            const floorA = parseInt(a.name.split(" - ")[1]); // Extract floor number
+                            const floorB = parseInt(b.name.split(" - ")[1]);
+                            return floorB - floorA; // Sort ascending
+                        })
+                        .map(room => {
+                            // Extract parts of the name and reformat
                         const [campus, floor, ...nameParts] = room.name.split(" - ");
                         const roomName = nameParts.join(" ");
                         const formattedRoomName = `${roomName} - Floor ${floor}`;
