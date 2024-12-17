@@ -7,7 +7,7 @@ a {
 .sidebar{
     display: flex;
     flex-direction: column;
-    
+
 }
 
 .logo {
