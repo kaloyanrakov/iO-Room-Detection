@@ -46,80 +46,38 @@ function AllRoomsPage() {
         setFloorFilter(e.target.value);
     }
 
-    const handleSearch = e => {
-        e.preventDefault();
-        const getRooms = async () => {
-            try {
-                console.log('Fetching rooms...');
-                const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, null, null);
-                console.log('Fetched rooms data:', roomsData);
+    const fetchRoomsWithEvents = async (pageIndex, pageSize, searchInput, floorFilter, statusFilter) => {
+        try {
+            console.log('Fetching rooms...');
+            const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
+            console.log('Fetched rooms data:', roomsData);
 
-                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                        console.log(`Fetching events for room: ${room.email}`);
-                        const events = await EventApi.getEventsByEmail(room.email);
-                        console.log(`Fetched events for room ${room.email}:`, events);
-                        return { ...room, meetings: events };
-                    } else {
-                        return { ...room, meetings: [] };
-                    }
-                }));
-                console.log('Rooms with events:', roomsWithEvents);
-                setRooms(roomsWithEvents);
-            } catch (error) {
-                console.error('Error fetching rooms:', error);
-            }
-        };
-        getRooms();
+            const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
+                if (room.name.toLowerCase().includes('testruimte')) {
+                    console.log(`Fetching events for room: ${room.email}`);
+                    const events = await EventApi.getEventsByEmail(room.email);
+                    console.log(`Fetched events for room ${room.email}:`, events);
+                    return { ...room, meetings: events };
+                } else {
+                    return { ...room, meetings: [] };
+                }
+            }));
+            console.log('Rooms with events:', roomsWithEvents);
+            setRooms(roomsWithEvents);
+        } catch (error) {
+            console.error('Error fetching rooms:', error);
+        }
     }
 
-    useEffect(() => {
-        const getRooms = async () => {
-            try {
-                console.log('Fetching rooms...');
-                const roomsData = await fetchRooms(pageIndex, pageSize, null, floorFilter, statusFilter);
-                console.log('Fetched rooms data:', roomsData);
+    const handleSearch = e => {
+        e.preventDefault();
+        fetchRoomsWithEvents(pageIndex, pageSize, searchInput, null, null);
+    }
 
-                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                        console.log(`Fetching events for room: ${room.email}`);
-                        const events = await EventApi.getEventsByEmail(room.email);
-                        console.log(`Fetched events for room ${room.email}:`, events);
-                        return { ...room, meetings: events };
-                    } else {
-                        return { ...room, meetings: [] };
-                    }
-                }));
-                console.log('Rooms with events:', roomsWithEvents);
-                setRooms(roomsWithEvents);
-            } catch (error) {
-                console.error('Error fetching rooms:', error);
-            }
-        };
-        getRooms();
-    }, [floorFilter, statusFilter])
 
     useEffect(() => {
-        const loadRooms = async () => {
-            try {
-                const roomsData = await fetchRooms(pageIndex, pageSize, null, null, null);  // Fetch rooms based on pageIndex and pageSize
-                const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
-                    if (room.email === 'Testruimte1.eindhoven@iodigital.com') {
-                        console.log(`Fetching events for room: ${room.email}`);
-                        const events = await EventApi.getEventsByEmail(room.email);
-                        console.log(`Fetched events for room ${room.email}:`, events);
-                        return { ...room, meetings: events };
-                    } else {
-                        return { ...room, meetings: [] };
-                    }
-                }));
-                setRooms(roomsWithEvents);  // Store paginated rooms
-            } catch (error) {
-                console.error("Error loading rooms:", error);
-            }
-        };
-        loadRooms();
-    }, [pageIndex, pageSize]);
+        fetchRoomsWithEvents(pageIndex, pageSize, null, floorFilter, statusFilter);
+    }, [floorFilter, statusFilter, pageIndex, pageSize]);
 
     useEffect(() => {
         if (!searchInput?.trim()) {
@@ -138,15 +96,9 @@ function AllRoomsPage() {
 
             return () => clearInterval(interval);
         }
-    }, [searchInput]); 
+    }, [searchInput]);
 
     const handleNextPage = () => {
-
-        console.log('Current page index:', pageIndex);
-        console.log('Total rooms to show for current page:', (pageIndex + 1) * pageSize);
-        console.log('Total Rooms:', allRooms);
-        console.log('Rooms:', rooms);
-
         if ((pageIndex + 1) * pageSize < allRooms.length) {
             setPageIndex(pageIndex + 1);
         }

@@ -23,7 +23,7 @@
 
 .text-occupied{
     color: red;
-    text-shadow: 0 0 1px #EDF9FF ;
+    /*text-shadow: 0 0 1px #EDF9FF ;*/
 }
 
 .text-available{
