@@ -207,3 +207,17 @@ a {
 #floor {
     margin-left: 17px;
 }
+
+.custom-pagin-btn {
+    margin-bottom: 20px;
+    color: white;
+    padding: 10px 20px; 
+    border: none;
+    cursor: pointer;
+}
+.custom-pagin-btn:disabled {
+    background-color: #6c757d;
+    color: #d6d6d6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

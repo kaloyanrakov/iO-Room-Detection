@@ -1,18 +1,23 @@
 import axios from 'axios';
 
-const fetchRooms = async (searchInput) => {
+const fetchRooms = async (pageIndex, pageSize, searchInput, floorFilter, statusFilter) => {
     try {
-        let response;
+        let params = { 
+            pageIndex: pageIndex,
+            pageSize: pageSize,
+        };
         if (searchInput?.trim()) {
-            response = await axios.get('http://localhost:8080/rooms', {
-                params: {
-                  searchInput: searchInput.toString()
-                }
-        });
-        } else {
-            response = await axios.get('http://localhost:8080/rooms');
+            params.searchInput = searchInput.toString();
         }
-
+        if (floorFilter?.trim()) {
+            params.floorNumber = floorFilter.toString();
+        }
+        if (statusFilter?.trim()) {
+            params.status = statusFilter.toString();
+        }
+        const response = await axios.get('http://localhost:8080/rooms', {
+            params: params
+        });
         console.log('Fetched rooms:', response.data);
         return response.data.rooms;
     } catch (error) {
@@ -20,4 +25,17 @@ const fetchRooms = async (searchInput) => {
         throw error;
     }
 };
+
+
+const fetchAllRooms = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/rooms');  // No pagination params
+        console.log('Fetched all rooms:', response.data);
+        return response.data.rooms;
+    } catch (error) {
+        console.error('Error fetching all rooms:', error);
+        throw error;
+    }
+};
+
 export default fetchRooms;
