@@ -96,12 +96,13 @@ function UpdateRoomPage() {
                             id="roomCamera"
                             value={camera}
                             onClick={cameraChanged}
-                        >  
-                        {cameras.map(camera => {
-                            return (
-                                <option value={camera.id} key={camera.id}>{camera.macAddress}</option>
-                            )
-                        })}
+                        >
+                            <option value="" disabled selected>Select a camera</option>
+                            {cameras.map(camera => {
+                                return (
+                                    <option value={camera.id} key={camera.id}>{camera.macAddress}</option>
+                                )
+                            })}
                         </select>
                     </div>
                     <button className="btn" type="submit">
