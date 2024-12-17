@@ -111,12 +111,12 @@ function AllRoomsPage() {
         if (status === 'OCCUPIED_NOW') {
             const currentMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) <= now && new Date(meeting.endTime) > now);
             if (currentMeeting) {
-                return `Until ${new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                return `Until ${new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
             }
         }
 
         const nextMeeting = todayMeetings.find(meeting => new Date(meeting.startTime) > now);
-        return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : "Until end of the day";
+        return nextMeeting ? `Until ${new Date(nextMeeting.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}` : "Until end of the day";
     };
 
     const filteredRooms = rooms.filter((room) => {
