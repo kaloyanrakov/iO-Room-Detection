@@ -35,7 +35,7 @@ public class RoomsController {
     @GetMapping
     public ResponseEntity<GetAllRoomsResponse> getAllRooms(@RequestParam(value = "placeId", required = false, defaultValue = "rooms.eindhoven@iodigital.com") String placeId,
                                                            @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
-                                                           @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                                           @RequestParam(value = "pageSize", required = false, defaultValue = "250") int pageSize,
                                                            @RequestParam(value = "status", required = false, defaultValue = "" ) String status,
                                                            @RequestParam(value = "floorNumber", required = false, defaultValue = "-1") int floorNumber,
                                                            @RequestParam(value = "searchInput", required = false, defaultValue = "") String searchInput) {

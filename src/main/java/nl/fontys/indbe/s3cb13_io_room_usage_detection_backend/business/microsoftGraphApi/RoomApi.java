@@ -25,7 +25,7 @@ public class RoomApi {
                 .graphRoom()
                 .get(RequestConfiguration -> {
                     RequestConfiguration.queryParameters.filter = "endsWith(emailAddress, 'eindhoven@iodigital.com')";
-                    if (searchInput.isBlank()) {
+                    if (searchInput == null || searchInput.isBlank()) {
                         RequestConfiguration.queryParameters.skip = pageIndex * pageSize;
                         RequestConfiguration.queryParameters.top = pageSize;
                     }
