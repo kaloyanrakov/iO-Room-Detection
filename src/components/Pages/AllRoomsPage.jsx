@@ -32,18 +32,21 @@ function AllRoomsPage() {
     const [searchInput, setSearchInput] = useState();
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize] = useState(10);
-    const [allRooms, setAllRooms] = useState([]); 
-
+    const [allRooms, setAllRooms] = useState([]);
+    const [disableNext, setDisableNext] = useState([]);
     const onChangeSearchInput = e => {
         setSearchInput(e.target.value);
+        setPageIndex(0);
     }
 
     const handleStatusChange = (e) => {
         setStatusFilter(e.target.value);
+        setPageIndex(0);
     }
-    
+
     const handleFloorChange = (e) => {
         setFloorFilter(e.target.value);
+        setPageIndex(0);
     }
 
     const fetchRoomsWithEvents = async (pageIndex, pageSize, searchInput, floorFilter, statusFilter) => {
@@ -51,7 +54,11 @@ function AllRoomsPage() {
             console.log('Fetching rooms...');
             const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
             console.log('Fetched rooms data:', roomsData);
+            if (roomsData.length === 0) {
+                console.warn('No more rooms available on this page.');
+                return;
 
+            }
             const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
                 if (room.name.toLowerCase().includes('testruimte')) {
                     console.log(`Fetching events for room: ${room.email}`);
@@ -64,6 +71,11 @@ function AllRoomsPage() {
             }));
             console.log('Rooms with events:', roomsWithEvents);
             setRooms(roomsWithEvents);
+            if (roomsWithEvents.length < pageSize) {
+                setDisableNext(true);
+            } else {
+                setDisableNext(false);
+            }
         } catch (error) {
             console.error('Error fetching rooms:', error);
         }
@@ -179,13 +191,13 @@ function AllRoomsPage() {
         <div className="main-content">
             <form onSubmit={handleSearch}>
                 <div className="search-bar">
-                    <input type="text" placeholder="Search Rooms" required onChange={onChangeSearchInput}/>
-                    <button className="btn" type="submit"><img src={searchIcon} alt="search icon"/></button>
+                    <input type="text" placeholder="Search Rooms" required onChange={onChangeSearchInput} />
+                    <button className="btn" type="submit"><img src={searchIcon} alt="search icon" /></button>
                 </div>
             </form>
 
             <div className="rooms-list">
-            {rooms.length > 0 ? (
+                {rooms.length > 0 ? (
                     // Sort rooms by floor before mapping
                     [...rooms]
                         .sort((a, b) => {
@@ -195,33 +207,33 @@ function AllRoomsPage() {
                         })
                         .map(room => {
                             // Extract parts of the name and reformat
-                        const [campus, floor, ...nameParts] = room.name.split(" - ");
-                        const roomName = nameParts.join(" ");
-                        const formattedRoomName = `${roomName} - Floor ${floor}`;
+                            const [campus, floor, ...nameParts] = room.name.split(" - ");
+                            const roomName = nameParts.join(" ");
+                            const formattedRoomName = `${roomName} - Floor ${floor}`;
 
-                        return (
-                            <Link to={room.email.toString()} key={room.email}>
-                                <div className={`indiv-room border-${room.status}`}>
-                                    <div className="room-left">
-                                        <h2>{formattedRoomName}</h2>
-                                        <PeopleAmount label={`${room.currentCapacity}/10`} />
+                            return (
+                                <Link to={room.email.toString()} key={room.email}>
+                                    <div className={`indiv-room border-${room.status}`}>
+                                        <div className="room-left">
+                                            <h2>{formattedRoomName}</h2>
+                                            <PeopleAmount label={`${room.currentCapacity}/10`} />
+                                        </div>
+                                        <div className="room-right">
+                                            <p className={`room-status text-${room.status}`}>{statusElem(room.status)}</p>
+                                            <p className="until">{getNextMeetingTime(room.meetings, room.status)}</p>
+                                        </div>
                                     </div>
-                                    <div className="room-right">
-                                        <p className={`room-status text-${room.status}`}>{statusElem(room.status)}</p>
-                                        <p className="until">{getNextMeetingTime(room.meetings, room.status)}</p>
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })
+                                </Link>
+                            );
+                        })
                 ) : (
                     <p>No rooms available</p>
                 )}
             </div>
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={pageIndex === 0} className="btn custom-pagin-btn">Previous</button>
-                <button onClick={handleNextPage} disabled={(pageIndex + 1) * pageSize >= rooms} className="btn custom-pagin-btn">Next</button>
-            </div>
+                <button onClick={handleNextPage} disabled={disableNext} className="btn custom-pagin-btn">Next</button>
+                </div>
         </div>
     );
 
