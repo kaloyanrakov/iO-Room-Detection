@@ -213,10 +213,10 @@ a {
 .custom-pagin-btn {
     margin-bottom: 20px;
     color: white;
-    padding: 10px 20px; 
-    border: none;
+    padding: 10px 20px;
     cursor: pointer;
     border: 2px solid transparent;
+    transition: 0.3s;
 }
 .custom-pagin-btn:disabled {
     background-color: #6c757d;
@@ -227,7 +227,8 @@ a {
 }
 .custom-pagin-btn:hover {
     outline: none;
-    border: 2px solid   rgb(214, 0, 0);
+    border: 2px solid transparent;
+    background-color: #6B9AB3;
     
 }
 .custom-pagin-btn:disabled:hover {
