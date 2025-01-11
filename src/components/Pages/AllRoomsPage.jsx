@@ -10,10 +10,6 @@ import { Link } from 'react-router-dom';
 import EventApi from "../../api/EventApi.jsx";
 import fetchAllRooms from "../../api/fetchRooms.js";
 
-function formatName(name) {
-    return name.replace(name.substring(0, name.lastIndexOf("-") + 2), "");
-}
-
 function PeopleAmount({ label }) {
     return (
         <span className="people-amount">
@@ -233,7 +229,7 @@ function AllRoomsPage() {
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={pageIndex === 0} className="btn custom-pagin-btn">Previous</button>
                 <button onClick={handleNextPage} disabled={disableNext} className="btn custom-pagin-btn">Next</button>
-                </div>
+            </div>
         </div>
     );
 

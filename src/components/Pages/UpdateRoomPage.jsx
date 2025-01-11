@@ -56,14 +56,6 @@ function UpdateRoomPage() {
         fetchRoom();
     }, [])
 
-    // const sidebar = (
-    //     <div className="sidebar">
-    //         <div className="img-div">
-    //             <a href="/rooms"><img src={logo} className="logo" alt="IO_Logo"/></a>
-    //         </div>
-    //     </div>
-    // );
-
     const sidebar = (
         <div className="sidebar">
             <div className="img-div">

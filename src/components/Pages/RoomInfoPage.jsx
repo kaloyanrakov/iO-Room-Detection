@@ -9,20 +9,10 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
-/**
- * 
- * @param {Date} date 
- * @returns string
- */
 function formatDate(date) {
     return String(`${date.getHours().toString().padStart(2, "0")
         }:${date.getMinutes().toString().padStart(2, '0')
         }`);
-
-}
-
-function formatName(name) {
-    return name.replace(name.substring(0, name.lastIndexOf("-")+2), "");
 }
 
 function Appointment({ appointment }) {
@@ -121,7 +111,7 @@ function RoomInfoPage() {
                 <PeopleAmount label={`${room.currentCapacity}/10`} />
             </div>
             <div className="sidebar-buttons">
-            <Link to="update" className="btn btn-update">Update Room</Link>
+                <Link to="update" className="btn btn-update">Update Room</Link>
             </div>
         </div>
     );
