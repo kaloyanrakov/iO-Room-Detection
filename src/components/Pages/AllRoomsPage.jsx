@@ -172,7 +172,7 @@ function AllRoomsPage() {
             <form>
                 <button className="btn" type="button" onClick={() => { setStatusFilter(""); setFloorFilter(""); }}>Clear Filters</button>
             </form>
-            <a href="/login" className="btn login-btn custom-login-btn">Log In</a>
+            {/*<a href="/login" className="btn login-btn custom-login-btn">Log In</a>*/}
         </div>
     );
 

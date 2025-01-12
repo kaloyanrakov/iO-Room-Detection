@@ -108,6 +108,10 @@ a {
     color: white;
 }
 
+.indiv-room:hover {
+    background-color: #1e333f;
+}
+
 .room-left {
     display: flex;
     flex-direction: row;
