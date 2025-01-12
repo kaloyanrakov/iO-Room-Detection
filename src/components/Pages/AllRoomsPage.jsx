@@ -120,6 +120,9 @@ function AllRoomsPage() {
 
     const getNextMeetingTime = (meetings, status) => {
         const now = new Date();
+        if (!Array.isArray(meetings)) {
+            return "No meetings available";
+        }
         const todayMeetings = meetings.filter(meeting => new Date(meeting.startTime).getDate() === now.getDate());
 
         if (todayMeetings.length === 0) {

@@ -7,6 +7,7 @@ import MeetingRoomApi from "../../api/MeetingRoomApi";
 import EventApi from "../../api/EventApi";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
 import React, { useState, useEffect } from 'react';
 
 function formatDate(date) {
@@ -52,6 +53,7 @@ function RoomInfoPage() {
     const [room, setRoom] = useState(initialRoomState);
     const [events, setEvents] = useState([]);
     const params = useParams();
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const fetchRoom = () => {
         MeetingRoomApi.getMeetingRoomByEmail(params.email)
@@ -60,15 +62,12 @@ function RoomInfoPage() {
     }
 
     const fetchEvents = () => {
-        EventApi.getEventsByEmail(params.email)
+        const startDate = selectedDate.toISOString().split('T')[0];
+        const endDate = selectedDate.toISOString().split('T')[0];
+        EventApi.getEventsByEmailAndDateRange(params.email, startDate, endDate)
             .then(data => setEvents(data))
             .catch(error => console.log(error));
-    }
-
-    // useEffect(() => {
-    //     fetchRoom();
-    //     fetchEvents();
-    // }, [room.currentCapacity])
+    };
 
     useEffect(() => {
         fetchRoom();
@@ -77,9 +76,9 @@ function RoomInfoPage() {
             fetchRoom();
             fetchEvents();
         }, 5000);
-      
+
         return () => clearInterval(interval);
-      }, []);
+    }, [selectedDate]);
 
     const statusElem = room.status === 'OCCUPIED_NOW'
         ? <span className="text-occupied">Occupied</span>
@@ -106,9 +105,9 @@ function RoomInfoPage() {
             <div className="filter">
                 <h1 className="status">Status: &nbsp; {statusElem}</h1>
             </div>
-            <br />
+            <br/>
             <div className="room-right-image">
-                <PeopleAmount label={`${room.currentCapacity}/10`} />
+                <PeopleAmount label={`${room.currentCapacity}/10`}/>
             </div>
             <div className="sidebar-buttons">
                 <Link to="update" className="btn btn-update">Update Room</Link>
@@ -123,10 +122,23 @@ function RoomInfoPage() {
                 <button className="btn" type="submit"><img src={serachIcon} alt="search icon" /></button>
             </div>
 
+            <div className="date-picker-container">
+                <label>Choose a date: </label>
+                <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    dateFormat="yyyy-MM-dd"
+                />
+            </div>
+
             <div className="appointments-list">
-                {events.map((event, idx) => (
-                    <Appointment appointment={event} key={idx + 1} />
-                ))}
+                {Array.isArray(events) && events.length > 0 ? (
+                    events.map((event, idx) => (
+                        <Appointment appointment={event} key={idx + 1}/>
+                    ))
+                ) : (
+                    <p>No events scheduled for this date.</p>
+                )}
             </div>
         </div>
     );
