@@ -50,10 +50,12 @@ function AllRoomsPage() {
             console.log('Fetching rooms...');
             const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
             console.log('Fetched rooms data:', roomsData);
+            
             if (roomsData.length === 0) {
-                console.warn('No more rooms available on this page.');
+                console.warn('No rooms available for the applied filters.');
+                setRooms([]);
+                setDisableNext(true);
                 return;
-
             }
             const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
                 if (room.name.toLowerCase().includes('testruimte')) {
