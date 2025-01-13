@@ -97,7 +97,7 @@ function UpdateRoomPage() {
                             })}
                         </select>
                     </div>
-                    <button className="btn" type="submit">
+                    <button className="updatebutton" type="submit">
                         Update room
                     </button>
                 </div>
