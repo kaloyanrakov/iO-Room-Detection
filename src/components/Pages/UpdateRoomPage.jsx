@@ -86,8 +86,8 @@ function UpdateRoomPage() {
                         <select
                             name="roomCamera"
                             id="roomCamera"
-                            value={camera}
                             onClick={cameraChanged}
+                            required
                         >
                             <option value="" disabled selected>Select a camera</option>
                             {cameras.map(camera => {
