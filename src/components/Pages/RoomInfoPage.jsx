@@ -65,19 +65,15 @@ function RoomInfoPage() {
         const startDate = selectedDate.toISOString().split('T')[0];
         const endDate = selectedDate.toISOString().split('T')[0];
         EventApi.getEventsByEmailAndDateRange(params.email, startDate, endDate)
-            .then(data => setEvents(data))
+            .then(data => {
+                setEvents(data);
+            })
             .catch(error => console.log(error));
     };
 
     useEffect(() => {
         fetchRoom();
         fetchEvents();
-        const interval = setInterval(() => {
-            fetchRoom();
-            fetchEvents();
-        }, 5000);
-
-        return () => clearInterval(interval);
     }, [selectedDate]);
 
     const statusElem = room.status === 'OCCUPIED_NOW'

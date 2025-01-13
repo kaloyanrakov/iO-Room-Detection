@@ -20,8 +20,6 @@ function PeopleAmount({ label }) {
 }
 
 function AllRoomsPage() {
-
-    const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
     const [statusFilter, setStatusFilter] = useState("");
     const [floorFilter, setFloorFilter] = useState("");
@@ -30,6 +28,8 @@ function AllRoomsPage() {
     const [pageSize] = useState(10);
     const [allRooms, setAllRooms] = useState([]);
     const [disableNext, setDisableNext] = useState([]);
+    const [loading, setLoading] = useState(true); // Add loading state
+
     const onChangeSearchInput = e => {
         setSearchInput(e.target.value);
         setPageIndex(0);
@@ -47,6 +47,7 @@ function AllRoomsPage() {
 
     const fetchRoomsWithEvents = async (pageIndex, pageSize, searchInput, floorFilter, statusFilter) => {
         try {
+            setLoading(true);
             console.log('Fetching rooms...');
             const roomsData = await fetchRooms(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
             console.log('Fetched rooms data:', roomsData);
@@ -55,6 +56,7 @@ function AllRoomsPage() {
                 console.warn('No rooms available for the applied filters.');
                 setRooms([]);
                 setDisableNext(true);
+                setLoading(false);
                 return;
             }
             const roomsWithEvents = await Promise.all(roomsData.map(async (room) => {
@@ -74,8 +76,10 @@ function AllRoomsPage() {
             } else {
                 setDisableNext(false);
             }
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching rooms:', error);
+            setLoading(false);
         }
     }
 
@@ -174,7 +178,7 @@ function AllRoomsPage() {
             <form>
                 <button className="btn" type="button" onClick={() => { setStatusFilter(""); setFloorFilter(""); }}>Clear Filters</button>
             </form>
-            {/*<a href="/login" className="btn login-btn custom-login-btn">Log In</a>*/}
+            <a href="/login" className="btn login-btn custom-login-btn">Log In</a>
         </div>
     );
 
@@ -197,9 +201,12 @@ function AllRoomsPage() {
                 </div>
             </form>
 
-            <div className="rooms-list">
-                {rooms.length > 0 ? (
-                    // Sort rooms by floor before mapping
+            {loading ? (
+                <div className="loading">Loading...</div> // Display loading indicator
+            ) : (
+                <div className="rooms-list">
+                    {rooms.length > 0 ? (
+                        // Sort rooms by floor before mapping
                     [...rooms]
                         .sort((a, b) => {
                             const floorA = parseInt(a.name.split(" - ")[1]); // Extract floor number
@@ -231,6 +238,7 @@ function AllRoomsPage() {
                     <p>No rooms available</p>
                 )}
             </div>
+        )}
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={pageIndex === 0} className="btn custom-pagin-btn">Previous</button>
                 <button onClick={handleNextPage} disabled={disableNext} className="btn custom-pagin-btn">Next</button>
