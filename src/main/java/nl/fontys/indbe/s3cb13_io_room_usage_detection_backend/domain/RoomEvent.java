@@ -18,4 +18,5 @@ public class RoomEvent {
     private LocalDateTime endTime;
     private String organizerName;
     private int maxOccupancy;
+    private String organizerEmail;
 }

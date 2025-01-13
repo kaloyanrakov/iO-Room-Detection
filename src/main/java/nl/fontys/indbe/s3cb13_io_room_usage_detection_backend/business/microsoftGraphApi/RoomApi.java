@@ -49,4 +49,17 @@ public class RoomApi {
         return result.getValue().get(0);
     }
 
+    public List<Room> getRoomsWithCapacity(int capacity) {
+
+        String filter =  String.format("endsWith(emailAddress, 'eindhoven@iodigital.com') AND capacity eq '%d'", capacity );
+
+
+        RoomCollectionResponse result = graphServiceClient.places()
+                .graphRoom()
+                .get(RequestConfiguration -> {
+                    RequestConfiguration.queryParameters.filter = filter;
+                });
+        return result.getValue();
+    }
+
 }

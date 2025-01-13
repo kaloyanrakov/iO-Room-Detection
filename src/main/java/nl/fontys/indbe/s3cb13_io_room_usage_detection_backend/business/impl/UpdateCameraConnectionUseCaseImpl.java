@@ -8,6 +8,7 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.UpdateCam
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionRequest;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.CreateCameraConnectionResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.message.GetMeetingRoomResponse;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.microsoftGraphApi.EventApi;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.domain.RoomEventStatus;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.CameraConnectionRepository;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.MeetingRoomRepository;
@@ -28,6 +29,7 @@ public class UpdateCameraConnectionUseCaseImpl implements UpdateCameraConnection
     private final ReservationRepository reservationRepository;
     private final CreateCameraConnectionUseCase createCameraConnectionUseCase;
     private final GetMeetingRoomUseCase getMeetingRoomUseCase;
+    private final EventApi eventApi;
 
     @Transactional
     @Override
@@ -51,11 +53,15 @@ public class UpdateCameraConnectionUseCaseImpl implements UpdateCameraConnection
             if (getMeetingRoomResponse.getMeetingRoom().getStatus() == RoomEventStatus.OCCUPIED_NOW) {
                 String roomEventId = getMeetingRoomResponse.getMeetingRoom().getRoomEvent().getId();
                 Integer maxOccupancy = reservationRepository.getReservationMaxOccupancyById(roomEventId);
+
+                 String seriesMasterId = eventApi.getCurrentRoomEvent(getMeetingRoomResponse.getMeetingRoom().getEmail(), roomEventId).getSeriesMasterId();
+
                 if (maxOccupancy == null) {
                     ReservationEntity reservationEntity = ReservationEntity.builder()
                             .id(roomEventId)
                             .meetingRoom(meetingRoomEntity)
                             .maxOccupancy(request.getNrOfOccupants())
+                            .seriesMasterId(seriesMasterId)
                             .build();
                     reservationRepository.save(reservationEntity);
                 }

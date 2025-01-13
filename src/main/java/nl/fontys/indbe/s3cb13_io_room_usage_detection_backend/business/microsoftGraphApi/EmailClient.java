@@ -8,8 +8,12 @@ import com.mailjet.client.transactional.SendEmailsRequest;
 import com.mailjet.client.transactional.TrackOpens;
 import com.mailjet.client.transactional.TransactionalEmail;
 import com.mailjet.client.transactional.response.SendEmailsResponse;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.domain.MeetingRoom;
+import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.repository.entity.MeetingRoomEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmailClient {
@@ -167,6 +171,36 @@ public class EmailClient {
                     
                     iO</p>""", recipientName))
                 .subject("Warning: you did not confirm you were not going to attend your reserved room.")
+                .trackOpens(TrackOpens.ENABLED)
+                .build();
+
+        SendEmailsResponse response = sendRequest(client, message);
+    }
+
+    public void sendRoomRecommendations(String recipientEmail, String recipientName, String senderEmail, MeetingRoom currentRoom, List<MeetingRoomEntity> recommendedRooms) {
+        if (senderEmail == null) {
+            senderEmail = FROM_EMAIL_ID;
+        }
+
+        MailjetClient client = getClient();
+
+        TransactionalEmail message = TransactionalEmail
+                .builder()
+                .to(new SendContact(recipientEmail, recipientName))
+                .from(new SendContact(senderEmail, "iO Digital Eindhoven"))
+                .htmlPart(String.format("""
+                    <p>Dear %s,</br></br>
+                    
+                    The system has detected low attendance to your meetings in room {currentRoom}.
+                    
+                    Please, book a better room.</br></br>
+                    Recommendations:<br>
+                    {recommendedRooms}
+                    
+                    Best regards,</br></br>
+                    
+                    iO</p>""", recipientName))
+                .subject("Warning: Please book a more appropriate meeting room.")
                 .trackOpens(TrackOpens.ENABLED)
                 .build();
 

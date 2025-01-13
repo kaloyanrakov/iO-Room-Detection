@@ -91,7 +91,7 @@ public class GetAllRoomsUseCaseImpl implements GetAllRoomsUseCase {
         List<MeetingRoom> filteredRooms = rooms.stream()
                 .filter(room -> request.getFloorNumber() == -1 || extractFloorFromDisplayName(room.getDisplayName()) == request.getFloorNumber())
                 .filter(room -> {
-                    if (request.getStatus().isEmpty())
+                    if (request.getStatus() == null)
                     {
                         return true;
                     }
