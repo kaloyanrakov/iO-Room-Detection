@@ -85,12 +85,12 @@ function AllRoomsPage() {
 
     const handleSearch = e => {
         e.preventDefault();
-        fetchRoomsWithEvents(pageIndex, pageSize, searchInput, null, null);
+        fetchRoomsWithEvents(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
     }
 
 
     useEffect(() => {
-        fetchRoomsWithEvents(pageIndex, pageSize, null, floorFilter, statusFilter);
+        fetchRoomsWithEvents(pageIndex, pageSize, searchInput, floorFilter, statusFilter);
     }, [floorFilter, statusFilter, pageIndex, pageSize]);
 
     useEffect(() => {
