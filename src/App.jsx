@@ -3,14 +3,9 @@ import AllRoomsPage from './components/Pages/AllRoomsPage';
 import RoomInfoPage from './components/Pages/RoomInfoPage';
 import UpdateRoomPage from "./components/Pages/UpdateRoomPage"
 import LogInPage from './components/Pages/LogInPage'
-import { useState } from 'react'
-
-
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
       <Router>
           <Routes>

@@ -2,7 +2,6 @@ import Layout from '../Layout';
 import '../../assets/css/roominfo.css';
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
-import serachIcon from '../../assets/img/search.png';
 import MeetingRoomApi from "../../api/MeetingRoomApi";
 import EventApi from "../../api/EventApi";
 import { useParams } from 'react-router-dom';
@@ -122,8 +121,6 @@ function RoomInfoPage() {
     const mainContent = (
         <div className="main-content">
             <div className="search-bar">
-                <input type="text" placeholder="Search Meetings" />
-                <button className="btn" type="submit"><img src={serachIcon} alt="search icon" /></button>
             </div>
 
             <div className="date-picker-container">

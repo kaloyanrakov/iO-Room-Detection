@@ -1,14 +1,12 @@
 import Layout from '../Layout';
 import '../../assets/css/allRooms.css';
 import fetchRooms from "../../api/fetchRooms.js";
-import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/IO_Logo.png';
 import userIcon from '../../assets/img/user.png';
 import searchIcon from '../../assets/img/search.png';
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import EventApi from "../../api/EventApi.jsx";
-import fetchAllRooms from "../../api/fetchRooms.js";
 
 function PeopleAmount({ label }) {
     return (
@@ -97,7 +95,7 @@ function AllRoomsPage() {
         if (!searchInput?.trim()) {
             const loadAllRooms = async () => {
                 try {
-                    const allRoomsData = await fetchAllRooms();  // Fetch all rooms
+                    const allRoomsData = await fetchRooms();  // Fetch all rooms
                     setAllRooms(allRoomsData);  // Store all rooms in state
                 } catch (error) {
                     console.error("Error loading all rooms:", error);

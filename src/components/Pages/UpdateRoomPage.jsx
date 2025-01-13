@@ -4,7 +4,7 @@ import '../../assets/css/updateRoom.css'
 import React, { useState, useEffect } from 'react';
 import MeetingRoomApi from "../../api/MeetingRoomApi";
 import CameraApi from "../../api/CameraApi";
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 
 
 function UpdateRoomPage() {
