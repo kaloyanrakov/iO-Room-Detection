@@ -72,7 +72,15 @@ function RoomInfoPage() {
     };
 
     useEffect(() => {
-        fetchRoom();
+            fetchRoom();
+            const interval = setInterval(() => {
+                fetchRoom();
+            }, 30000);
+
+            return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
         fetchEvents();
     }, [selectedDate]);
 
