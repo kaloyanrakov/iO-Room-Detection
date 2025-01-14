@@ -43,11 +43,9 @@ public class EventMeetingScheduler {
 
             if (isMeetingEnding(room.getRoomEvent().getEndTime())){
                 if (reservationRepository.getReservationMaxOccupancyById(room.getRoomEvent().getId()) <= 0){
-                    System.out.println("Send email");
-                    //emailClient.sendWarningAbsence(room.getRoomEvent().getOrganizerEmail(), room.getRoomEvent().getOrganizerName(), null);
+                    emailClient.sendWarningAbsence(room.getRoomEvent().getOrganizerEmail(), room.getRoomEvent().getOrganizerName(), null);
                 }
                 if (!isThresholdReached(room)){
-                    System.out.println("Send email Recommendations");
                      emailClient.sendRoomRecommendations(room.getRoomEvent().getOrganizerEmail(), room.getRoomEvent().getOrganizerName(), null, room, roomRecommendationsUseCase.roomRecommendations(room).get());
                 }
             }
