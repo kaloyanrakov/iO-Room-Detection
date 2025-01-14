@@ -7,6 +7,7 @@ import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl.Date
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -27,9 +28,10 @@ public class EventApi {
 
         EventCollectionResponse result = graphServiceClient.users()
                 .byUserId(roomEmail)
-                .calendar()
-                .events()
+                .calendarView()
                 .get(RequestConfiguration -> {
+                    RequestConfiguration.queryParameters.startDateTime = nowUtc;
+                    RequestConfiguration.queryParameters.endDateTime = nowUtc;
                     RequestConfiguration.queryParameters.filter = ongoingOrNextEventFilter;
                     RequestConfiguration.queryParameters.orderby = new String[]{"start/dateTime asc"};
                     RequestConfiguration.queryParameters.top = 1;
@@ -45,18 +47,13 @@ public class EventApi {
     public List<Event> getRoomEvents(String roomEmail, LocalDateTime startDate, LocalDateTime endDate) {
         final String TIMEZONE_SUFFIX_UTC = "Z";
 
-        String filter = String.format(
-                "start/dateTime ge '%s' and end/dateTime le '%s'",
-                DateTimeConverter.formatLocalDateTimeForApi(startDate, TIMEZONE_SUFFIX_UTC),
-                DateTimeConverter.formatLocalDateTimeForApi(endDate, TIMEZONE_SUFFIX_UTC)
-        );
-
         EventCollectionResponse result = graphServiceClient.users()
                 .byUserId(roomEmail)
                 .calendar()
-                .events()
+                .calendarView()
                 .get(RequestConfiguration -> {
-                    RequestConfiguration.queryParameters.filter = filter;
+                    RequestConfiguration.queryParameters.startDateTime = DateTimeConverter.formatLocalDateTimeForApi(startDate, TIMEZONE_SUFFIX_UTC);
+                    RequestConfiguration.queryParameters.endDateTime = DateTimeConverter.formatLocalDateTimeForApi(endDate.truncatedTo(ChronoUnit.SECONDS), TIMEZONE_SUFFIX_UTC);
                     RequestConfiguration.queryParameters.orderby = new String[]{"start/dateTime asc"};
                 });
 
