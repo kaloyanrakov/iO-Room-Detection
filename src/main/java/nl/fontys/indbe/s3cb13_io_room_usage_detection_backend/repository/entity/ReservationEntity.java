@@ -28,4 +28,7 @@ public class ReservationEntity {
     @Min(0)
     @Column(name = "max_occupancy")
     private Integer maxOccupancy;
+    @Length(max = 152)
+    @Column(name = "series_master_id")
+    private String seriesMasterId;
 }

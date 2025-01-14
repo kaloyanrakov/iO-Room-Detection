@@ -44,6 +44,14 @@ public class CreateRoomUseCaseImpl implements CreateRoomUseCase {
             newMeetingRoom.setId(request.getId());
         }
 
-        return this.meetingRoomRepository.save(newMeetingRoom);
+        try {
+            return this.meetingRoomRepository.save(newMeetingRoom);
+        }
+        catch (Exception e) {
+            this.meetingRoomRepository.deleteById(request.getId());
+           return  this.meetingRoomRepository.save(newMeetingRoom);
+        }
+
+//        return this.meetingRoomRepository.save(newMeetingRoom);
     }
 }

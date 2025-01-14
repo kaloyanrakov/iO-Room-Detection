@@ -1,12 +1,15 @@
 package nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.microsoftGraphApi;
 
-import com.microsoft.graph.models.Event;
-import com.microsoft.graph.models.EventCollectionResponse;
+import com.microsoft.graph.models.*;
 import com.microsoft.graph.serviceclient.GraphServiceClient;
+import com.microsoft.graph.users.item.calendar.getschedule.GetSchedulePostRequestBody;
+import com.microsoft.graph.users.item.calendar.getschedule.GetSchedulePostResponse;
 import nl.fontys.indbe.s3cb13_io_room_usage_detection_backend.business.impl.DateTimeConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -66,4 +69,67 @@ public class EventApi {
 
         return result.getValue();
     }
+
+    public Event getSeriesMasterEvent(String roomEmail, String seriesMasterId){
+        return graphServiceClient.users()
+                .byUserId(roomEmail)
+                .calendar()
+                .events()
+                .byEventId(seriesMasterId)
+                .get();
+    }
+
+    public Event getCurrentRoomEvent(String roomEmail, String roomEventId) {
+        String nowUtc = DateTimeConverter.getCurrentUtcDateTimeAsString();
+
+
+        Event result = graphServiceClient.users()
+                .byUserId(roomEmail)
+                .calendar()
+                .events()
+                .byEventId(roomEventId)
+                .get(RequestConfiguration -> {
+                    RequestConfiguration.queryParameters.select = new String[]{"seriesMasterId"};
+                });
+
+        if (result == null) {
+            return null;
+        }
+
+        return result;
+    }
+
+    public GetSchedulePostResponse getRoomAvailability(String roomEmail, LocalDateTime startDate, LocalDateTime endDate) {
+
+        // Convert LocalDateTime to DateTimeTimeZone
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeTimeZone startTime = new DateTimeTimeZone();
+        startTime.setDateTime(startDate.format(formatter));
+        startTime.setTimeZone("UTC");
+
+        DateTimeTimeZone endTime = new DateTimeTimeZone();
+        endTime.setDateTime(endDate.format(formatter));
+        endTime.setTimeZone("UTC");
+
+        // Prepare request body
+        GetSchedulePostRequestBody body = new GetSchedulePostRequestBody();
+        body.setSchedules(Collections.singletonList(roomEmail));
+        body.setStartTime(startTime);
+        body.setEndTime(endTime);
+        body.setAvailabilityViewInterval(15);
+
+        // Execute the request for a specific user/room
+        GetSchedulePostResponse schedules = graphServiceClient
+                .users()
+                .byUserId(roomEmail)
+                .calendar()
+                .getSchedule()
+                .post(body);
+
+        System.out.println(schedules.getValue());
+        System.out.println(schedules.getValue().size());
+
+        return schedules;
+    }
+
 }

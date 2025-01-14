@@ -20,6 +20,7 @@ final class RoomEventConverter {
                 .startTime(startDateTime)
                 .endTime(endDateTime)
                 .organizerName(event.getOrganizer().getEmailAddress().getName())
+                .organizerEmail(event.getOrganizer().getEmailAddress().getAddress())
                 .build();
     }
 }
