@@ -9,7 +9,7 @@ import java.util.List;
 public class MobileNetSSDPeopleDetector {
 
     private final Net net;
-    private static final int PERSON_CLASS_ID = 15;  // 15 is 'person' in COCO classes
+    private static final int PERSON_CLASS_ID = 15;  
     private static final float CONFIDENCE_THRESHOLD = 0.5f;
 
     public MobileNetSSDPeopleDetector(String prototxtPath, String modelPath) {
