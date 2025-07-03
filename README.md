@@ -14,13 +14,15 @@ A group project for tracking meeting room occupancy with cameras and AI-based pe
 iO Digital is facing inconsistencies in their meeting room booking system, with rooms appearing as “in use” even when unoccupied. The goal of the project is to build a monitoring system that counts the number of people in a room. The data is to be processed locally and sent to a web dashboard that displays each room, its current occupancy, and its status. The system is to be scalable and capable of being implemented across multiple iO locations.
 
 <h2 align="center">Our Solution</h2>
+<p>
 Firstly, using cameras, we scan the room for people while protecting their identities for privacy reasons:
-
+</p>
 <p align="center" style="margin: 20px 0;">
   <img src="Documentation/Images/Screenshot 2025-07-03 165212.png"width="500">
 </p>
+<p>
 Afterwards we log the number of people in each room and in case the room is empty 15 minutes after the meeting was supposed to start, we send a warning message. If a user logs in, they can add new rooms and cameras. This ensures that the system can be easily implemented in multiple locations.
-
+</p>
 <p align="center" style="margin: 20px 0;">
   <img src="Documentation/Images/Screenshot_2024-12-17_101303.png"width="500">
 </p>
