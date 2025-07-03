@@ -1,1 +1,0 @@
-ALTER TABLE `Camera_Connection` ADD `last_updated` DATETIME;

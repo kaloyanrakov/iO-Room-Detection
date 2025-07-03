@@ -1,1 +1,0 @@
-ALTER TABLE `Reservation` ADD `series_master_id` varchar(152);

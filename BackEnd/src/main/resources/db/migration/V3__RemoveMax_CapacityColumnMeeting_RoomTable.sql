@@ -1,1 +1,0 @@
-ALTER TABLE `Meeting_Room` DROP COLUMN `max_capacity`;
