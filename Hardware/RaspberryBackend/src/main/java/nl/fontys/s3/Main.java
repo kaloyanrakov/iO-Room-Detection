@@ -7,7 +7,7 @@ import org.opencv.videoio.VideoCapture;
 
 
 public class Main {
-    private static final String SERVER_URL = "http://localhost:8080/cameras"; // Temp Host URL
+    private static final String SERVER_URL = "http://192.168.78.40:8080/cameras"; // Temp Host URL
 
     private static final String MAC_ADDRESS = MacAddressFetcher.getMacAddress();
     private static final String prototxtPath = "models/deploy.prototxt";
@@ -34,23 +34,21 @@ public class Main {
 
         Mat frame = new Mat();
 
-        int prevPeopleDetected = 0;
-
         while (camera.read(frame)) {
-            int peopleDetections = detector.detectPeople(frame);
+            Mat[] blobImage = new Mat[1];
+            int peopleDetections = detector.detectPeople(frame, blobImage);
 
-            if (peopleDetections >= 0 && peopleDetections != prevPeopleDetected) {
-                HttpDataSender.sendData(SERVER_URL, MAC_ADDRESS, peopleDetections);
-                prevPeopleDetected = peopleDetections;
-
+            if (blobImage [0] != null) {
+                HighGui.imshow("Blob Image", blobImage[0]);
             }
 
             HighGui.imshow("People Detection", frame);
 
+
             if (HighGui.waitKey(1) == 27) break;  // Exit on 'Esc' key
 
             try {
-                Thread.sleep(5000); // Wait for 5 seconds between checks
+                Thread.sleep(1); // Wait for 5 seconds between checks
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
